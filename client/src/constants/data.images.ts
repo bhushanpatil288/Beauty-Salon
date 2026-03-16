@@ -1,0 +1,1 @@
+export const parlourImage = "/illustration-images/dummy-parlour.png";

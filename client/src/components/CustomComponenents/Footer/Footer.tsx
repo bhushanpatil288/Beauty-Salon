@@ -1,3 +1,5 @@
+import { services } from "../../../constants/data";
+
 const placeholders = [
   {
     text: "item1"
@@ -10,19 +12,18 @@ const placeholders = [
 
 const Footer = () => {
   return (
-    <div className="bg-primary text-secondary p-3">
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
+    <div className="bg-primary text-secondary px-16 py-16">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-16">
         <div>
-          <h2 className="font-bold text-xl mb-5">💅🏻 Pooja Beauty Salon</h2>
-          <p className="text-sm">Blocks, components and templates for building websites, landing pages and apps. Made with React, Shadcn/ui and Tailwind.</p>
-          <p className="text-sm">Perfect for early-stage product, startups, indie hackers, and personal projects.</p>
+          <h2 className="font-bold text-xl mb-5">💅🏻 Pooja Beauty Parlour</h2>
+          <p className="text-sm">Welcome to Pooja Beauty Parlour and Coaching Classes, where we believe that every woman deserves to feel confident and beautiful. Our team of experienced professionals is dedicated to providing you with the highest quality services in a warm and welcoming environment.</p>
         </div>
         <div>
-          <h3 className="font-bold mb-5">Items Heading</h3>
+          <h3 className="font-bold mb-5">Services</h3>
           <ul>
-            {placeholders.map((item, i) => {
+            {services.map((item, i) => {
               return (
-                <li key={i}>{item.text}</li>
+                <li key={i}>{item.title}</li>
               )
             })}
           </ul>
