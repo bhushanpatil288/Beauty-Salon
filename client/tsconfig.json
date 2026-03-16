@@ -1,0 +1,23 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "compilerOptions": {
+    // ... other options
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+      // If your project structure doesn't use a `src` directory,
+      // use "./*" instead: "@/*": ["./*"]
+    }
+  },
+  // ... other configs like "include"
+}
