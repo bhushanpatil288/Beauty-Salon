@@ -12,39 +12,28 @@ import {
   navigationMenuTriggerStyle,
 } from "../../ui/navigation-menu"
 
-const components: { title: string; href: string; description: string }[] = [
+const services: { title: string; href: string; description: string }[] = [
   {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
+    title: "Service 1",
+    href: "/services/service-1",
     description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
+      "This is a dummy description"
   },
   {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
+    title: "Service 2",
+    href: "/services/service-2",
     description:
-      "For sighted users to preview content available behind a link.",
+      "This is a dummy description"
   },
   {
-    title: "Progress",
-    href: "/docs/primitives/progress",
+    title: "Service 3",
+    href: "/services/service-3",
     description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+      "This is a dummy description"
   },
   {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
+    title: "View All",
+    href: "/services",
     description:
       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
   },
@@ -52,36 +41,30 @@ const components: { title: string; href: string; description: string }[] = [
 
 export default function Navbar() {
   return (
-    <div className="bg-primary text-secondary flex justify-between border items-center px-3 py-2">
+    <div className="bg-primary text-secondary flex justify-between items-center px-3 py-2">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="w-96">
-                <ListItem href="/docs" title="Introduction">
-                  Re-usable components built with Tailwind CSS.
-                </ListItem>
-                <ListItem href="/docs/installation" title="Installation">
-                  How to install dependencies and structure your app.
-                </ListItem>
-                <ListItem href="/docs/primitives/typography" title="Typography">
-                  Styles for headings, paragraphs, lists...etc
+                <ListItem href="/introduction" title="Introduction">
+                  How to use this site
                 </ListItem>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem className="hidden md:flex">
-            <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+            <NavigationMenuTrigger>Explore Services</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                {components.map((component) => (
+                {services.map((service) => (
                   <ListItem
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
+                    key={service.title}
+                    title={service.title}
+                    href={service.href}
                   >
-                    {component.description}
+                    {service.description}
                   </ListItem>
                 ))}
               </ul>
@@ -89,7 +72,7 @@ export default function Navbar() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-              <Link to="/docs">Docs</Link>
+              <Link to="/about">About</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>

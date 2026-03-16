@@ -1,0 +1,84 @@
+## Project Structure
+
+This project is separated into two main directories:
+
+- `client/`: The frontend React application powered by Vite.
+- `server/`: The backend Node.js and Express application.
+
+## Tech Stack
+
+### Frontend (`/client`)
+- **Framework**: React 19 + TypeScript + Vite
+- **Styling**: Tailwind CSS v4
+- **UI Components**: shadcn/ui & Radix UI
+- **Routing**: React Router DOM (v7)
+- **Icons**: Lucide React
+
+### Backend (`/server`)
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MongoDB with Mongoose
+- **Other**: CORS, dotenv
+
+## Getting Started
+
+Follow these steps to get the project running locally.
+
+### Prerequisites
+
+- Node.js (v18 or higher recommended)
+- MongoDB running locally or a MongoDB Atlas URI
+
+### 1. Server Setup
+
+1. Open a terminal and navigate to the `server` directory:
+   ```bash
+   cd server
+   ```
+2. Install the backend dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file based on `env.sample` in the `server` directory:
+   ```bash
+   cp env.sample .env
+   ```
+   *Edit the `.env` file to include your `MONGODB_URI` and any other required variables.*
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   The backend server should now be running (typically on `http://localhost:5000` or port specified in `.env`).
+
+### 2. Client Setup
+
+1. Open a new terminal and navigate to the `client` directory:
+   ```bash
+   cd client
+   ```
+2. Install the frontend dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the frontend development server:
+   ```bash
+   npm run dev
+   ```
+   The React application will be available at `http://localhost:5173`.
+
+## Core Features
+
+- **Customer Portal**: Browse available salon services and book appointments with an easy-to-use interface.
+- **Admin Dashboard**: Salon owners can manage appointments, view booking statuses, and control service offerings.
+- **Authentication**: Secure JWT-based login for admin access.
+- **Responsive Design**: Mobile-friendly and clean UI/UX using Tailwind CSS and shadcn/ui.
+
+## Scripts Details
+
+**Client:**
+- `npm run dev` - Starts the Vite development server.
+- `npm run build` - Builds the app for production.
+- `npm run lint` - Runs ESLint.
+
+**Server:**
+- `npm run dev` - Starts the backend server using nodemon for automatic restarts.
