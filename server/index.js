@@ -4,9 +4,9 @@ const app = require("./src/app");
 
 const PORT = process.env.PORT;
 const URL = process.env.URL;
-(async ()=>{
+(async () => {
   await connectDB();
-  app.listen(PORT, ()=>{
+  app.listen(PORT, () => {
     console.log(`server is running on ${URL}/${PORT}`);
   })
 })()

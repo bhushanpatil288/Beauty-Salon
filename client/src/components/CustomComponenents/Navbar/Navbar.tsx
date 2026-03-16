@@ -22,7 +22,7 @@ export default function Navbar() {
           <NavigationMenuItem>
             <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="w-96">
+              <ul className="w-50">
                 <ListItem href="/introduction" title="Introduction">
                   How to use this site
                 </ListItem>
