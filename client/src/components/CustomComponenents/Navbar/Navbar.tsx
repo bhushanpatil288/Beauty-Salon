@@ -1,5 +1,6 @@
 "use client"
 import { services } from "../../../constants/data";
+import { scissorImg } from "../../../constants/data.images";
 
 import * as React from "react"
 import { Link } from "react-router-dom"
@@ -12,6 +13,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "../../ui/navigation-menu"
+import { Button } from "../../ui/button";
 
 
 export default function Navbar() {
@@ -47,14 +49,28 @@ export default function Navbar() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-              <Link to="/about">About</Link>
+              <Link to="/about">
+                About
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <div>
+      <div className="flex justify-center items-center gap-3">
+        <div className="flex gap-1">
+          <Link to={"/signup"}>
+            <Button variant={"outline"} className="cursor-pointer hover:bg-secondary hover:text-primary">
+              Signup
+            </Button>
+          </Link>
+          <Link to={"/login"}>
+            <Button variant={"outline"} className="cursor-pointer hover:bg-secondary hover:text-primary">
+              Login
+            </Button>
+          </Link>
+        </div>
         <Link to="/">
-          Logo
+          <img src={scissorImg} alt="" width="30" className="invert" />
         </Link>
       </div>
     </div>

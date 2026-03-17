@@ -13,7 +13,7 @@ const placeholders = [
 const Footer = () => {
   return (
     <div className="bg-primary text-secondary px-16 py-16">
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-16">
+      <div className="overflow-hidden grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-16">
         <div>
           <h2 className="font-bold text-xl mb-5">💅🏻 Pooja Beauty Parlour</h2>
           <p className="text-sm">Welcome to Pooja Beauty Parlour and Coaching Classes, where we believe that every woman deserves to feel confident and beautiful. Our team of experienced professionals is dedicated to providing you with the highest quality services in a warm and welcoming environment.</p>
