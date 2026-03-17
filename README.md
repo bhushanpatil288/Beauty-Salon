@@ -48,11 +48,11 @@ Follow these steps to get the project running locally.
    cp env.sample .env
    ```
    *Edit the `.env` file to include your `MONGODB_URI` and any other required variables.*
-4. Start the development server:
+5. Start the development server:
    ```bash
    npm run dev
    ```
-   The backend server should now be running (typically on `http://localhost:8080` or port specified in `.env`).
+   The backend server should now be running (typically on `http://localhost:8080` or port specified in `.env`). *Note: Dummy services, users, and appointments are seeded automatically on startup.*
 
 ### 2. Client Setup
 
@@ -90,6 +90,7 @@ The client-side React application uses React Router with the following paths:
 The backend Express application exposes the following endpoints:
 - `GET /health` : Health check endpoint to verify the server is running.
 - `GET /services` : Retrieves a list of all available salon services.
+- `GET /appointments/all` : Retrieves a list of all appointments in the system.
 
 ## Scripts Details
 
