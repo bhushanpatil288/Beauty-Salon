@@ -16,7 +16,7 @@ const signup = async (req, res) => {
 
         const alreadyExists = await userModel.findOne({ phone });
         if (alreadyExists) {
-            return res.status(400).json({
+            return res.status(409).json({
                 message: "User already exists"
             })
         }
@@ -31,17 +31,24 @@ const signup = async (req, res) => {
         }
 
         const newUser = await userModel.create(user);
-        const token = genToken(newUser._id, newUser.phone);
+        const token = await genToken(newUser._id, newUser.phone);
 
-        res.cookie("token", token);
-        console.log(res.cookie);
-        res.status(201).json({
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax"
+        });
+        console.log("sending response");
+        return res.status(201).json({
             message: "User created successfully",
             user: newUser
         })
 
     } catch (e) {
-        res.send(e);
+        return res.status(500).json({
+            message: "Internal server error",
+            error: e.message
+        });
     }
 }
 

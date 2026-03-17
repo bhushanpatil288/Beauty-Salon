@@ -1,7 +1,13 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import Layout from "./Layout"
+import { signup } from "../api/api"
+import { useAuth } from "../context/AuthContext"
 
 const Signup = () => {
+    const navigate = useNavigate();
+    const { setUser, setToken } = useAuth();
+    const [error, setError] = useState({} as any);
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -17,8 +23,22 @@ const Signup = () => {
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        console.log(formData)
+        e.preventDefault();
+        (async () => {
+            try {
+                const res = await signup(formData);
+                setUser(res.data.user);
+                setToken(res.data.token);
+                navigate("/signup");
+                setError({});
+                setFormData({ name: "", phone: "", email: "", password: "" })
+            } catch (error: any) {
+                if (error.response.status === 409) {
+                    setError({ ...error, userExists: "User Already Exists" })
+                }
+                console.log(error.response.status)
+            }
+        })()
     }
     return (
         <Layout>
@@ -35,6 +55,7 @@ const Signup = () => {
                         <label htmlFor="password" className="text-primary">Password</label>
                         <input value={formData.password} onChange={handleChange} type="password" id="password" name="password" placeholder="password" className="border border-gray-300 rounded-md px-2 py-1" />
                         <button type="submit" className="bg-primary text-secondary rounded-md px-2 py-1 cursor-pointer">Signup</button>
+                        {error.userExists && <p className="text-red-500 text-center">{error.userExists}</p>}
                     </form>
                 </div>
             </div>

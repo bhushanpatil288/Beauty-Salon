@@ -74,7 +74,7 @@ Follow these steps to get the project running locally.
 
 - **Customer Portal**: Browse available salon services and book appointments with an easy-to-use interface.
 - **Admin Dashboard**: Salon owners can manage appointments, view booking statuses, and control service offerings.
-- **Authentication**: Secure JWT-based login for admin access and customer signup/login.
+- **Authentication & State**: Secure JWT-based login for admin access and customer signup/login. The React application uses the Context API (`AuthContext`) for global state management of user authentication and JWT tokens.
 - **Responsive Design**: Mobile-friendly and clean UI/UX using Tailwind CSS and shadcn/ui.
 
 ## Application Routes
@@ -93,7 +93,7 @@ The backend Express application exposes the following endpoints:
 - `GET /health` : Health check endpoint to verify the server is running.
 - `GET /services` : Retrieves a list of all available salon services.
 - `GET /appointments/all` : Retrieves a list of all appointments in the system.
-- `POST /auth/signup` : Registers a new user and returns a JWT token.
+- `POST /auth/signup` : Registers a new user and returns a JWT token (handles `409 Conflict` for existing users).
 
 ## Scripts Details
 
