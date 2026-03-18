@@ -8,4 +8,8 @@ const genToken = (id, phone) => {
     )
 }
 
-module.exports = { genToken }
+const decodeToken = (token) => {
+    return jwt.verify(token, process.env.JWT_SECRET);
+}
+
+module.exports = { genToken, decodeToken }

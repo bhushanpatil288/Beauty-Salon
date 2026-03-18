@@ -16,9 +16,9 @@ type service = {
     duration: number
 }
 
-const ServicesCard = ({ key, service }: { key: string, service: service }) => {
+const ServicesCard = ({ service }: { service: service }) => {
     return (
-        <Card size="lg" className="mx-auto w-full max-w-sm shadow" key={key}>
+        <Card size="lg" className="mx-auto w-full max-w-sm shadow">
             <CardHeader>
                 <CardTitle className="font-bold text-2xl">{service.heading}</CardTitle>
                 <CardDescription>

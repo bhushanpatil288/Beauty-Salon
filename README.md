@@ -93,7 +93,8 @@ The backend Express application exposes the following endpoints:
 - `GET /health` : Health check endpoint to verify the server is running.
 - `GET /services` : Retrieves a list of all available salon services.
 - `GET /appointments/all` : Retrieves a list of all appointments in the system.
-- `POST /auth/signup` : Registers a new user and returns a JWT token (handles `409 Conflict` for existing users).
+- `POST /auth/signup` : Registers a new user and sets a JWT cookie (handles `409 Conflict` for existing users).
+- `GET /auth/user` : Retrieves the currently authenticated user based on the JWT cookie.
 
 ## Scripts Details
 

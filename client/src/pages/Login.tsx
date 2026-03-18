@@ -24,8 +24,23 @@ const Login = () => {
                 <div className="flex flex-col gap-2">
                     <h1 className="text-2xl font-bold text-primary">Login</h1>
                     <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-                        <input type="number" name="phone" value={formData.phone} onChange={handleChange} placeholder="phone" className="border border-gray-300 rounded-md px-2 py-1 text-primary" />
-                        <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password" className="border border-gray-300 rounded-md px-2 py-1 text-primary" />
+                        <input
+                            type="number"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="phone"
+                            className="border border-gray-300 rounded-md px-2 py-1 text-primary"
+                        />
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            placeholder="Password"
+                            autoComplete="current-password"
+                            className="border border-gray-300 rounded-md px-2 py-1 text-primary"
+                        />
                         <button type="submit" className="bg-primary text-secondary rounded-md px-2 py-1 cursor-pointer">Login</button>
                     </form>
                 </div>

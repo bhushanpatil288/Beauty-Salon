@@ -32,7 +32,7 @@ const Services = () => {
                         :
                         services.length !== 0 ?
                             services.map((service: any) => (
-                                <ServicesCard key={service.heading} service={service} />
+                                <ServicesCard key={service._id} service={service} />
                             ))
                             :
                             <p className="text-center my-10">No service available</p>

@@ -1,6 +1,9 @@
 "use client"
 import { services } from "../../../constants/data";
 import { scissorImg } from "../../../constants/data.images";
+import { useAuth } from "../../../context/AuthContext";
+import { logout } from "../../../api/api";
+import { useNavigate } from "react-router-dom";
 
 import * as React from "react"
 import { Link } from "react-router-dom"
@@ -17,8 +20,17 @@ import { Button } from "../../ui/button";
 
 
 export default function Navbar() {
+  const { user, setUser, token, setToken } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    setUser(null);
+    setToken(null);
+    navigate("/", { replace: true });
+  }
   return (
-    <div className="bg-primary container mx-auto mt-2 rounded-xl text-secondary flex justify-between items-center px-3 py-2">
+    <div className="bg-primary fixed top-2 left-1/2 -translate-x-1/2 z-10 container rounded-xl text-secondary flex justify-between items-center px-3 py-2">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -58,16 +70,31 @@ export default function Navbar() {
       </NavigationMenu>
       <div className="flex justify-center items-center gap-3">
         <div className="flex gap-1">
-          <Link to={"/signup"}>
-            <Button variant={"outline"} className="cursor-pointer hover:bg-secondary hover:text-primary">
-              Signup
-            </Button>
-          </Link>
-          <Link to={"/login"}>
-            <Button variant={"outline"} className="cursor-pointer hover:bg-secondary hover:text-primary">
-              Login
-            </Button>
-          </Link>
+          {user ?
+            <>
+              <Link to={"/profile"}>
+                <Button variant={"outline"} className="cursor-pointer hover:bg-secondary hover:text-primary">
+                  Profile
+                </Button>
+              </Link>
+              <Button variant={"outline"} className="cursor-pointer hover:bg-secondary hover:text-primary" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
+            :
+            <>
+              <Link to={"/signup"}>
+                <Button variant={"outline"} className="cursor-pointer hover:bg-secondary hover:text-primary">
+                  Signup
+                </Button>
+              </Link>
+              <Link to={"/login"}>
+                <Button variant={"outline"} className="cursor-pointer hover:bg-secondary hover:text-primary">
+                  Login
+                </Button>
+              </Link>
+            </>
+          }
         </div>
         <Link to="/">
           <img src={scissorImg} alt="" width="30" className="invert" />
