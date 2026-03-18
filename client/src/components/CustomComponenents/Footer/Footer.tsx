@@ -12,7 +12,7 @@ const placeholders = [
 
 const Footer = () => {
   return (
-    <div className="bg-primary container mx-auto rounded-t-xl text-secondary px-16 py-16">
+    <div className="bg-primary shadow-xl container mx-auto rounded-t-xl text-secondary px-16 py-16">
       <div className="overflow-hidden grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-16">
         <div>
           <h2 className="font-bold text-xl mb-5">💅🏻 Pooja Beauty Parlour</h2>

@@ -30,7 +30,7 @@ export default function Navbar() {
     navigate("/", { replace: true });
   }
   return (
-    <div className="bg-primary fixed top-2 left-1/2 -translate-x-1/2 z-10 container rounded-xl text-secondary flex justify-between items-center px-3 py-2">
+    <div className="bg-primary shadow-xl fixed top-2 left-1/2 -translate-x-1/2 z-10 container rounded-xl text-secondary flex justify-between items-center px-3 py-2">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

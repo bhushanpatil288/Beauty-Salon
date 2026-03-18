@@ -21,6 +21,6 @@ app.use("/appointments", appointmentRouter);
 app.use("/auth", authRouter);
 
 // dummy data
-seedServices();
+// seedServices();
 
 module.exports = app;
