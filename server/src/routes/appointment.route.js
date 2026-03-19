@@ -4,6 +4,6 @@ const { showAllAppointments, createAppointment } = require("../controllers/appoi
 const { userAuth } = require("../middlewares/auth");
 
 router.get("/all", showAllAppointments)
-router.post("/create", createAppointment)
+router.post("/create", userAuth, createAppointment)
 
 module.exports = router;

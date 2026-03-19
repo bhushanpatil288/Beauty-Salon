@@ -6,11 +6,9 @@ import { useServices } from "../context/ServicesContext";
 import { Button } from "../components/ui/button";
 import { createAppointment } from "../api/api";
 import { CalendarDays, Clock, FileText, Sparkles } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
 
 export default function Appointment() {
   const { services, loading: servicesLoading } = useServices();
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -18,7 +16,6 @@ export default function Appointment() {
     date: "",
     time: "",
     notes: "",
-    userId: user?._id,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");

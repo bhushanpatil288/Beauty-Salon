@@ -12,7 +12,8 @@ const showAllAppointments = async (req, res) => {
 
 const createAppointment = async (req, res) => {
     try {
-        const { userId, serviceId, date, time, notes } = req.body;
+        const { serviceId, date, time, notes } = req.body;
+        const userId = req.user._id;
 
         const newAppointment = new Appointment({
             userId,
