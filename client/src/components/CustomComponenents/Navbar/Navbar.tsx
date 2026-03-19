@@ -4,6 +4,7 @@ import { services } from "../../../constants/data";
 import { useAuth } from "../../../context/AuthContext";
 import { logout } from "../../../api/api";
 import { useNavigate } from "react-router-dom";
+import { logo } from "../../../constants/data.images";
 
 import * as React from "react"
 import { Link } from "react-router-dom"
@@ -39,7 +40,8 @@ export default function Navbar() {
     <div className="bg-primary/10 backdrop-blur-md fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-7xl rounded-2xl flex flex-col px-4 py-3 transition-all duration-300">
       <div className="flex justify-between items-center w-full">
         <Link to="/" onClick={closeMenu}>
-          <p className="text-xl font-bold text-primary">Pooja Beauty</p>
+          {/* <p className="text-xl font-bold text-primary">Pooja Beauty</p> */}
+          <img src={logo} alt="" className="w-20 scale-150" />
         </Link>
 
         {/* Desktop Navigation */}
