@@ -1,4 +1,4 @@
-# Pooja Beauty Salon
+# Beauty Salon
 
 A full-stack salon appointment booking system built with the MERN stack (MongoDB, Express, React, Node.js). This application enables customers to browse available services and book appointments, while providing salon owners with an administrative dashboard to manage bookings.
 
