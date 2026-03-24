@@ -48,4 +48,20 @@ const adminSignupValidation = [
         .withMessage("Password must be at least 6 characters long"),
 ]
 
-module.exports = { signupValidation, loginValidation, adminSignupValidation }
+const adminLoginValidation = [
+    body("phone")
+        .isMobilePhone("en-IN")
+        .withMessage("Enter valid phone number")
+        .notEmpty()
+        .withMessage("Phone number is required"),
+    body("secretKey")
+        .notEmpty()
+        .withMessage("Secret Key is required")
+        .equals(process.env.ADMIN_SECRET_KEY)
+        .withMessage("Invalid Secret Key"),
+    body("password")
+        .notEmpty()
+        .withMessage("Password is required")
+]
+
+module.exports = { signupValidation, loginValidation, adminSignupValidation, adminLoginValidation }

@@ -2,7 +2,7 @@ import Layout from "./Layout";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/api";
+import { adminLogin } from "../api/api";
 
 const AdminLogin = () => {
     const { setUser } = useAuth();
@@ -10,6 +10,7 @@ const AdminLogin = () => {
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         phone: "",
+        secretKey: "",
         password: ""
     })
 
@@ -23,7 +24,7 @@ const AdminLogin = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
-            const response = await login(formData);
+            const response = await adminLogin(formData);
             setUser(response.data.user)
             navigate("/")
         } catch (e: any) {
@@ -47,6 +48,17 @@ const AdminLogin = () => {
                             placeholder="phone"
                             className="border border-gray-300 rounded-md px-2 py-1 text-primary"
                         />
+
+                        <input
+                            type="password"
+                            name="secretKey"
+                            value={formData.secretKey}
+                            onChange={handleChange}
+                            placeholder="Secret Key"
+                            required
+                            className="border border-gray-300 rounded-md px-2 py-1 text-primary"
+                        />
+
                         <input
                             type="password"
                             name="password"

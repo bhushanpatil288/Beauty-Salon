@@ -1,19 +1,24 @@
 # Beauty Salon
 
-A full-stack salon appointment booking system built with the MERN stack (MongoDB, Express, React, Node.js). This application enables customers to browse available services and book appointments, while providing salon owners with an administrative dashboard to manage bookings.
+A full-stack salon appointment booking system built with the MERN stack (MongoDB, Express, React, Node.js). This application enables customers to browse available services and book appointments, while providing salon owners with a dedicated admin portal to manage bookings.
 
 ## Recent Updates
 
-- **Appointment Booking Flow & Logic**: Created a fully functional `Appointment.tsx` booking page and implemented robust timeslot blocking logic to prevent overlapping or double-bookings. Integrated `GET /appointments/date/:date` to accurately fetch and calculate blocked slots dynamically based on service duration.
-- **Auth Session Persistence**: Fixed the `AuthContext` state to reliably verify the user session on page refresh via the `/auth/user` endpoint. Introduced a `loading` state to prevent `<ProtectedRoute>` components from prematurely kicking out authenticated users.
-- **UI/UX Refinements & Bug Fixes**: Polished the navigation bar and footer with frosted glass effects, resolved React list rendering warnings in `Footer.tsx`, and ensured fully responsive dynamic styling across forms.
+- **Role-Based Authentication**: Introduced separate admin and user flows. Admin accounts are created via a dedicated `/signup/admin` endpoint that requires a secret key, and admins log in via `/login/admin`. Regular users are blocked from logging in through the admin login route and vice versa.
+- **Admin Signup & Login Pages**: Added `AdminSignup.tsx` and `AdminLogin.tsx` pages on the frontend. Both require a `secretKey` field in addition to the standard credentials. The secret key is validated server-side against the `ADMIN_SECRET_KEY` environment variable.
+- **Separate Admin API Functions**: Added `adminSignup` and `adminLogin` functions in `api.ts` that target the correct admin-specific endpoints (`/auth/signup/admin`, `/auth/login/admin`).
+- **Form Validation Middleware**: Added `adminSignupValidation` and `adminLoginValidation` middleware to validate the `secretKey` field alongside phone, name, and password.
+- **Appointment Booking Flow**: Created a fully functional `Appointment.tsx` booking page with timeslot blocking logic to prevent double-bookings. Integrates `GET /appointments/date/:date` to fetch and calculate blocked slots dynamically based on service duration.
+- **Auth Session Persistence**: Fixed `AuthContext` state to reliably verify user session on page refresh via `/auth/user`. Added a `loading` state to prevent `<ProtectedRoute>` components from prematurely redirecting authenticated users.
+- **UI/UX Refinements**: Polished the navigation bar and footer with frosted glass effects, resolved React list rendering warnings in `Footer.tsx`, and ensured fully responsive styling across all forms.
 
 ## Project Structure
 
-This project is separated into two main directories:
-
-- `client/`: The frontend React application powered by Vite.
-- `server/`: The backend Node.js and Express application.
+```
+pooja-Beauty-Salon/
+├── client/          # React + TypeScript frontend (Vite)
+└── server/          # Node.js + Express backend
+```
 
 ## Tech Stack
 
@@ -23,97 +28,117 @@ This project is separated into two main directories:
 - **UI Components**: shadcn/ui & Radix UI
 - **Routing**: React Router DOM (v7)
 - **Icons**: Lucide React
+- **HTTP**: Axios
 
 ### Backend (`/server`)
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Database**: MongoDB with Mongoose
-- **Other**: CORS, dotenv
+- **Auth**: JWT (via cookie), bcrypt
+- **Validation**: express-validator
+- **Other**: CORS, cookie-parser, dotenv
 
 ## Getting Started
 
-Follow these steps to get the project running locally.
-
 ### Prerequisites
-
-- Node.js (v18 or higher recommended)
+- Node.js (v18 or higher)
 - MongoDB running locally or a MongoDB Atlas URI
 
 ### 1. Server Setup
 
-1. Open a terminal and navigate to the `server` directory:
-   ```bash
-   cd server
-   ```
-2. Install the backend dependencies:
-   ```bash
-   npm install
-   ```
-3. Create a `.env` file based on `env.sample` in the `server` directory:
-   ```bash
-   cp env.sample .env
-   ```
-   *Edit the `.env` file to include your `MONGODB_URI` and any other required variables.*
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-   The backend server should now be running (typically on `http://localhost:8080` or port specified in `.env`). *Note: Dummy services, users, and appointments are seeded automatically on startup.*
+```bash
+cd server
+npm install
+cp env.sample .env   # then fill in your values
+npm run dev
+```
+
+The backend runs on `http://localhost:8080` (or the port specified in `.env`).
+
+#### Required `.env` Variables
+
+| Variable | Description |
+|---|---|
+| `DB_URI` | MongoDB connection string |
+| `PORT` | Server port (default: `8080`) |
+| `JWT_SECRET` | Secret key for signing JWTs |
+| `ADMIN_SECRET_KEY` | Secret passphrase required to create/login as admin |
 
 ### 2. Client Setup
 
-1. Open a new terminal and navigate to the `client` directory:
-   ```bash
-   cd client
-   ```
-2. Install the frontend dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the frontend development server:
-   ```bash
-   npm run dev
-   ```
-   The React application will be available at `http://localhost:5173`.
+```bash
+cd client
+npm install
+npm run dev
+```
+
+The React app will be available at `http://localhost:5173`.
 
 ## Core Features
 
-- **Customer Portal**: Browse available salon services and book appointments with an easy-to-use interface.
-- **Admin Dashboard**: Salon owners can manage appointments, view booking statuses, and control service offerings.
-- **Authentication & State**: Secure JWT-based login for admin access and customer signup/login. The React application uses the Context API (`AuthContext`) for global state management of user authentication and JWT tokens.
-- **Responsive Design**: Mobile-friendly and clean UI/UX using Tailwind CSS and shadcn/ui.
+- **Customer Portal**: Browse salon services and book appointments with real-time availability checking.
+- **Admin Portal**: Separate admin signup/login protected by a secret key. Admins can manage appointments and services.
+- **Role-Based Auth**: User model supports `"user"` and `"admin"` roles. Each role has dedicated endpoints and frontend pages with appropriate guards.
+- **Authentication & State**: Secure HttpOnly cookie-based JWT authentication. The React app uses the Context API (`AuthContext`) for global auth state management.
+- **Appointment Timeslot Blocking**: Prevents overlapping bookings based on service duration and existing appointments for a given date.
+- **Responsive Design**: Mobile-friendly UI using Tailwind CSS and shadcn/ui.
 
 ## Application Routes
 
 ### Frontend Routes
-The client-side React application uses React Router with the following paths:
-- `/` : Home page
-- `/services` : Services listing and detailed view
-- `/appointments` : Secure appointment booking page (Protected Route)
-- `/introduction` : Introduction page
-- `/about` : About page
-- `/login` : User/Admin login page
-- `/signup` : User registration page
-- `/profile` : User profile and dashboard (Protected Route)
+
+| Path | Description | Protected |
+|---|---|---|
+| `/` | Home page | No |
+| `/services` | Services listing | No |
+| `/about` | About page | No |
+| `/introduction` | Introduction page | No |
+| `/signup` | User registration | No |
+| `/login` | User login | No |
+| `/signup/admin` | Admin registration (requires secret key) | No |
+| `/login/admin` | Admin login (requires secret key) | No |
+| `/appointments` | Appointment booking page | Yes (user) |
+| `/profile` | User profile & dashboard | Yes (user) |
 
 ### Backend API Endpoints
-The backend Express application exposes the following endpoints:
-- `GET /health` : Health check endpoint to verify the server is running.
-- `GET /services` : Retrieves a list of all available salon services.
-- `GET /appointments/all` : Retrieves a list of all appointments in the system.
-- `GET /appointments/date/:date` : Retrieves all appointments booked for a specific date to handle correct overlapping and availability.
-- `POST /appointments/create` : Creates a new appointment booking.
-- `POST /auth/signup` : Registers a new user and sets a JWT cookie (handles `409 Conflict` for existing users).
-- `POST /auth/login` : Authenticates an existing user and sets a secure JWT cookie.
-- `GET /auth/user` : Retrieves the currently authenticated user based on the JWT cookie.
-- `POST /auth/logout` : Logs out the user by clearing the JWT cookie.
 
-## Scripts Details
+#### Health
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Server health check |
+
+#### Services
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/services` | List all salon services |
+
+#### Appointments
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/appointments/all` | List all appointments |
+| `GET` | `/appointments/date/:date` | Get appointments for a specific date |
+| `POST` | `/appointments/create` | Create a new appointment |
+
+#### Auth
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/auth/signup` | Register a new user (role: `user`) |
+| `POST` | `/auth/signup/admin` | Register a new admin — requires `secretKey` |
+| `POST` | `/auth/login` | Login as a regular user |
+| `POST` | `/auth/login/admin` | Login as admin — requires `secretKey` |
+| `GET` | `/auth/user` | Get currently authenticated user (JWT cookie) |
+| `POST` | `/auth/logout` | Logout and clear JWT cookie |
+
+## Scripts
 
 **Client:**
-- `npm run dev` - Starts the Vite development server.
-- `npm run build` - Builds the app for production.
-- `npm run lint` - Runs ESLint.
+```bash
+npm run dev      # Start Vite dev server
+npm run build    # Build for production
+npm run lint     # Run ESLint
+```
 
 **Server:**
-- `npm run dev` - Starts the backend server using nodemon for automatic restarts.
+```bash
+npm run dev      # Start backend with nodemon
+```

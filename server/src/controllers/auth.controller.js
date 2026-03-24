@@ -85,6 +85,12 @@ const login = async (req, res) => {
             })
         }
 
+        if (user.role === "admin") {
+            return res.status(403).json({
+                message: "Admin cannot login as user"
+            })
+        }
+
         const isPasswordValid = await comparePass(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({
@@ -155,4 +161,55 @@ const adminSignup = async (req, res) => {
     }
 }
 
-module.exports = { signup, logout, login, adminSignup }
+const adminLogin = async (req, res) => {
+    try {
+        const error = validationResult(req);
+        if (!error.isEmpty()) {
+            return res.status(400).json({
+                message: error.array()[0].msg
+            })
+        }
+
+        const { phone, password } = req.body;
+
+        const user = await userModel.findOne({ phone });
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+
+        if (user.role !== "admin") {
+            return res.status(403).json({
+                message: "Admin login only"
+            })
+        }
+
+        const isPasswordValid = await comparePass(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                message: "Invalid password"
+            })
+        }
+
+        const token = genToken(user._id, user.phone);
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            path: "/"
+        });
+        return res.status(200).json({
+            message: "User logged in successfully",
+            user: user
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: "Internal server error",
+            error: err.message
+        })
+    }
+}
+
+module.exports = { signup, logout, login, adminSignup, adminLogin }
