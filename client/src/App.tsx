@@ -1,5 +1,5 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom"
-import { Home, Services, Introduction, About, Login, Signup, Profile, Appointment } from "./pages"
+import { Home, Services, Introduction, About, Login, AdminLogin, Signup, AdminSignup, Profile, Appointment } from "./pages"
 import { AuthProvider } from "./context/AuthContext.tsx"
 import ProtectedRoute from "./components/CustomComponenents/ProtectedRoute.tsx"
 import { ServicesProvider } from "./context/ServicesContext.tsx"
@@ -15,7 +15,9 @@ const App = () => {
             <Route path="/introduction" element=<Introduction /> />
             <Route path="/about" element=<About /> />
             <Route path="/login" element=<Login /> />
+            <Route path="/login/admin" element=<AdminLogin /> />
             <Route path="/signup" element=<Signup /> />
+            <Route path="/signup/admin" element=<AdminSignup /> />
             <Route path="/profile" element=
               <ProtectedRoute>
                 <Profile />

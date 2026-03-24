@@ -3,8 +3,10 @@ import Services from "./Services";
 import Introduction from "./Introduction";
 import About from "./About";
 import Login from "./Login";
+import AdminLogin from "./AdminLogin";
 import Signup from "./Signup";
+import AdminSignup from "./AdminSignup";
 import Appointment from "./Appointment";
 import Profile from "./Profile";
 
-export { Home, Services, Introduction, About, Login, Signup, Appointment, Profile }
+export { Home, Services, Introduction, About, Login, AdminLogin, Signup, AdminSignup, Appointment, Profile }
