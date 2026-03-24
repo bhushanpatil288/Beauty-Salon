@@ -8,7 +8,7 @@ import { logo } from "../../../constants/data.images";
 
 import * as React from "react"
 import { Link } from "react-router-dom"
-import { Menu, X, LogIn, LogOut, User, UserPlus } from "lucide-react";
+import { Menu, X, LogIn, LogOut, User, UserPlus, LayoutDashboard } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -81,6 +81,15 @@ export default function Navbar() {
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
+              {user?.role === "admin" && (
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                    <Link to="/admin/dashboard">
+                      Dashboard
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -140,6 +149,11 @@ export default function Navbar() {
           <Link to="/about" onClick={closeMenu} className="text-foreground hover:text-primary font-medium px-2 py-2 rounded-md hover:bg-secondary/50">
             About Us
           </Link>
+          {user?.role === "admin" && (
+            <Link to="/admin/dashboard" onClick={closeMenu} className="text-foreground hover:text-primary font-medium px-2 py-2 rounded-md hover:bg-secondary/50">
+              Dashboard
+            </Link>
+          )}
 
           <div className="flex flex-col gap-3 mt-2 pt-4 border-t border-border/20">
             {user ?

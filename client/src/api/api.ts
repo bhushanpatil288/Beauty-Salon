@@ -11,3 +11,4 @@ export const logout = async () => await axios.post(`${baseurl}/auth/logout`, {},
 export const fetchUser = async () => await axios.get(`${baseurl}/auth/user`, { withCredentials: true });
 export const createAppointment = async (formData: any) => await axios.post(`${baseurl}/appointments/create`, formData, { withCredentials: true });
 export const getAppointmentsByDate = async (date: string) => await axios.get(`${baseurl}/appointments/date/${date}`, { withCredentials: true });
+export const fetchAppointments = async () => await axios.get(`${baseurl}/appointments/admin/all`, { withCredentials: true });

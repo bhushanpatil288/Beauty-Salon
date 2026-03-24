@@ -4,20 +4,35 @@ A full-stack salon appointment booking system built with the MERN stack (MongoDB
 
 ## Recent Updates
 
-- **Role-Based Authentication**: Introduced separate admin and user flows. Admin accounts are created via a dedicated `/signup/admin` endpoint that requires a secret key, and admins log in via `/login/admin`. Regular users are blocked from logging in through the admin login route and vice versa.
-- **Admin Signup & Login Pages**: Added `AdminSignup.tsx` and `AdminLogin.tsx` pages on the frontend. Both require a `secretKey` field in addition to the standard credentials. The secret key is validated server-side against the `ADMIN_SECRET_KEY` environment variable.
-- **Separate Admin API Functions**: Added `adminSignup` and `adminLogin` functions in `api.ts` that target the correct admin-specific endpoints (`/auth/signup/admin`, `/auth/login/admin`).
-- **Form Validation Middleware**: Added `adminSignupValidation` and `adminLoginValidation` middleware to validate the `secretKey` field alongside phone, name, and password.
-- **Appointment Booking Flow**: Created a fully functional `Appointment.tsx` booking page with timeslot blocking logic to prevent double-bookings. Integrates `GET /appointments/date/:date` to fetch and calculate blocked slots dynamically based on service duration.
-- **Auth Session Persistence**: Fixed `AuthContext` state to reliably verify user session on page refresh via `/auth/user`. Added a `loading` state to prevent `<ProtectedRoute>` components from prematurely redirecting authenticated users.
-- **UI/UX Refinements**: Polished the navigation bar and footer with frosted glass effects, resolved React list rendering warnings in `Footer.tsx`, and ensured fully responsive styling across all forms.
+- **Admin Dashboard**: Built a fully functional `AdminDashboard.tsx` page at `/admin/dashboard` showing live appointment stats (booked / completed / cancelled counts) and a full appointments table with customer name, phone, date, time, color-coded status badge, duration, and notes. Appointments are populated server-side with user data via Mongoose `.populate()`.
+- **Admin Route Guards**: Added a dedicated `src/routes/` folder containing `ProtectedRoute.tsx` (user auth) and `AdminProtectedRoute.tsx` (admin-only — redirects non-admins to home and unauthenticated users to `/login/admin`). Both exported from a barrel `index.ts`.
+- **`adminAuth` Middleware**: Added server-side `adminAuth` middleware that validates the JWT cookie and enforces `role === "admin"` before granting access to admin-only endpoints.
+- **Admin-only Appointments Endpoint**: Added `GET /appointments/admin/all` protected by `adminAuth`. Removed the previously unprotected `GET /appointments/all` endpoint. Results are populated with user data (excluding password).
+- **Appointments in AuthContext**: `AuthContext` now fetches and exposes an `appointments` state for admin users on login/page-load. Fixed a bug where a failed appointments fetch could silently wipe the user session.
+- **Navbar Dashboard Link**: Navbar now conditionally shows a "Dashboard" link for admin users (both desktop and mobile menus).
+- **Role-Based Authentication**: Separate admin and user auth flows. Admin signup/login require a `secretKey` validated against `ADMIN_SECRET_KEY` in `.env`. Users are blocked from admin routes and vice versa.
+- **Admin Signup & Login Pages**: `AdminSignup.tsx` and `AdminLogin.tsx` with `secretKey` field. Backed by `adminSignupValidation` and `adminLoginValidation` middleware.
+- **Auth Session Persistence**: Fixed `AuthContext` to verify session on page refresh via `/auth/user` with a `loading` state preventing premature `<ProtectedRoute>` redirects.
+- **Appointment Booking Flow**: `Appointment.tsx` with timeslot blocking logic using `GET /appointments/date/:date` and service duration.
+- **UI/UX Refinements**: Frosted glass navbar/footer, responsive forms, and React list rendering fixes.
 
 ## Project Structure
 
 ```
 pooja-Beauty-Salon/
-├── client/          # React + TypeScript frontend (Vite)
-└── server/          # Node.js + Express backend
+├── client/
+│   └── src/
+│       ├── routes/          # ProtectedRoute & AdminProtectedRoute
+│       ├── pages/           # All page components
+│       ├── context/         # AuthContext, ServicesContext
+│       ├── api/             # Axios API functions
+│       └── components/      # Reusable UI components
+└── server/
+    └── src/
+        ├── controllers/     # Route handlers
+        ├── middlewares/     # auth, formValidation
+        ├── models/          # Mongoose schemas
+        └── routes/          # Express routers
 ```
 
 ## Tech Stack
@@ -77,9 +92,9 @@ The React app will be available at `http://localhost:5173`.
 ## Core Features
 
 - **Customer Portal**: Browse salon services and book appointments with real-time availability checking.
-- **Admin Portal**: Separate admin signup/login protected by a secret key. Admins can manage appointments and services.
-- **Role-Based Auth**: User model supports `"user"` and `"admin"` roles. Each role has dedicated endpoints and frontend pages with appropriate guards.
-- **Authentication & State**: Secure HttpOnly cookie-based JWT authentication. The React app uses the Context API (`AuthContext`) for global auth state management.
+- **Admin Dashboard**: Live stats and a full appointments table (customer details, date, time, status, duration, notes). Admin-only — protected by `AdminProtectedRoute` on the frontend and `adminAuth` middleware on the backend.
+- **Role-Based Auth**: User model supports `"user"` and `"admin"` roles. Dedicated route guards (`ProtectedRoute`, `AdminProtectedRoute`) in `src/routes/` and server-side middleware enforce access per role.
+- **Authentication & State**: Secure HttpOnly cookie-based JWT. `AuthContext` manages user + appointments state globally, and auto-fetches admin appointments on session restore.
 - **Appointment Timeslot Blocking**: Prevents overlapping bookings based on service duration and existing appointments for a given date.
 - **Responsive Design**: Mobile-friendly UI using Tailwind CSS and shadcn/ui.
 
@@ -98,6 +113,7 @@ The React app will be available at `http://localhost:5173`.
 | `/signup/admin` | Admin registration (requires secret key) | No |
 | `/login/admin` | Admin login (requires secret key) | No |
 | `/appointments` | Appointment booking page | Yes (user) |
+| `/admin/dashboard` | Admin dashboard with appointments table | Yes (admin) |
 | `/profile` | User profile & dashboard | Yes (user) |
 
 ### Backend API Endpoints
@@ -113,11 +129,11 @@ The React app will be available at `http://localhost:5173`.
 | `GET` | `/services` | List all salon services |
 
 #### Appointments
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/appointments/all` | List all appointments |
-| `GET` | `/appointments/date/:date` | Get appointments for a specific date |
-| `POST` | `/appointments/create` | Create a new appointment |
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `GET` | `/appointments/date/:date` | Public | Get appointments for a specific date |
+| `POST` | `/appointments/create` | User | Create a new appointment |
+| `GET` | `/appointments/admin/all` | Admin | List all appointments (with user details) |
 
 #### Auth
 | Method | Endpoint | Description |

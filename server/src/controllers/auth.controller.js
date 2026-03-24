@@ -200,6 +200,7 @@ const adminLogin = async (req, res) => {
             sameSite: "lax",
             path: "/"
         });
+        console.log("admin logged in");
         return res.status(200).json({
             message: "User logged in successfully",
             user: user

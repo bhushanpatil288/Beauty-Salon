@@ -1,10 +1,11 @@
 import { useContext, createContext, useState, useEffect, type ReactNode } from "react"
-import { fetchUser } from "../api/api";
+import { fetchUser, fetchAppointments } from "../api/api";
 
 interface AuthContextType {
     user: any | null;
     token: string | null;
     loading: boolean;
+    appointments: any[];
     setUser: React.Dispatch<React.SetStateAction<any | null>>;
     setToken: React.Dispatch<React.SetStateAction<string | null>>;
 }
@@ -15,12 +16,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<any | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [appointments, setAppointments] = useState<any[]>([]);
 
     useEffect(() => {
         const getUser = async () => {
             try {
                 const res = await fetchUser();
-                setUser(res.data.user || res.data); // handles variations depending on API wrapper
+                const loggedInUser = res.data.user || res.data;
+                setUser(loggedInUser);
+
+                if (loggedInUser?.role === "admin") {
+                    try {
+                        const apptRes = await fetchAppointments();
+                        setAppointments(apptRes.data);
+                    } catch (apptErr) {
+                        console.error("Failed to fetch appointments:", apptErr);
+                    }
+                }
             } catch (err) {
                 setUser(null);
             } finally {
@@ -31,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, token, loading, setUser, setToken }}>
+        <AuthContext.Provider value={{ user, token, loading, setUser, setToken, appointments }}>
             {children}
         </AuthContext.Provider>
     )

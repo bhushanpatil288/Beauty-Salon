@@ -2,7 +2,7 @@ const Appointment = require("../models/appointment.model");
 
 const showAllAppointments = async (req, res) => {
     try {
-        const appointments = await Appointment.find();
+        const appointments = await Appointment.find().populate({ path: "userId", select: "-password" });
         res.send(appointments);
     } catch (e) {
         console.log(e);
