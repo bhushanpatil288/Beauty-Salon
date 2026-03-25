@@ -1,54 +1,45 @@
 const Appointment = require("../models/appointment.model");
+const asyncHandler = require("../utils/asyncHandler");
+const ApiError = require("../utils/ApiError");
+const ApiResponse = require("../utils/ApiResponse");
 
-const showAllAppointments = async (req, res) => {
-    try {
-        const appointments = await Appointment.find().populate({ path: "userId", select: "-password" });
-        res.send(appointments);
-    } catch (e) {
-        console.log(e);
-        res.send(e);
+const showAllAppointments = asyncHandler(async (req, res) => {
+    const appointments = await Appointment.find().populate({
+        path: "userId",
+        select: "-password",
+    });
+    return ApiResponse(res, 200, "Appointments fetched successfully", appointments);
+});
+
+const createAppointment = asyncHandler(async (req, res) => {
+    const { serviceId, date, time, notes, duration } = req.body;
+    if (!serviceId || !date || !time) {
+        throw new ApiError(400, "serviceId, date, and time are required");
     }
-}
 
-const createAppointment = async (req, res) => {
-    try {
-        const { serviceId, date, time, notes, duration } = req.body;
-        const userId = req.user._id;
+    const newAppointment = await Appointment.create({
+        userId: req.user._id,
+        serviceId,
+        date,
+        time,
+        notes,
+        duration,
+        status: "booked",
+    });
+    return ApiResponse(res, 201, "Appointment booked successfully", newAppointment);
+});
 
-        const newAppointment = new Appointment({
-            userId,
-            serviceId,
-            date,
-            time,
-            notes,
-            duration,
-            status: 'booked'
-        });
-        await newAppointment.save();
-        res.status(201).send(newAppointment);
-    } catch (e) {
-        console.log(e);
-        res.status(500).send({ message: "Failed to book appointment" });
-    }
-}
+const getAppointmentsByDate = asyncHandler(async (req, res) => {
+    const start = new Date(req.params.date);
+    if (isNaN(start.getTime())) throw new ApiError(400, "Invalid date format");
 
-const getAppointmentsByDate = async (req, res) => {
-    try {
-        const date = req.params.date;
-        const start = new Date(date);
-        const end = new Date(start);
-        end.setDate(end.getDate() + 1);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
 
-        const appointments = await Appointment.find({
-            date: {
-                $gte: start,
-                $lt: end
-            }
-        });
-        res.send(appointments);
-    } catch (e) {
-        console.log(e);
-        res.status(500).send({ message: "Failed to get appointments" });
-    }
-}
+    const appointments = await Appointment.find({
+        date: { $gte: start, $lt: end },
+    });
+    return ApiResponse(res, 200, "Appointments fetched successfully", appointments);
+});
+
 module.exports = { showAllAppointments, createAppointment, getAppointmentsByDate };

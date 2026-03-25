@@ -3,36 +3,26 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/api";
+import useForm from "../hooks/useForm";
 
 const Login = () => {
     const { setUser } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState("");
-    const [formData, setFormData] = useState({
-        phone: "",
-        password: ""
-    })
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        })
-    }
+    const { formData, handleChange } = useForm({ phone: "", password: "" });
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
             const response = await login(formData);
-            setUser(response.data.user)
-            navigate("/")
+            setUser(response.data.data.user);
+            navigate("/");
         } catch (e: any) {
-            setError(e.response.data.message);
-            setTimeout(() => {
-                setError("");
-            }, 2000);
+            setError(e.response?.data?.message ?? "Login failed");
+            setTimeout(() => setError(""), 2000);
         }
-    }
+    };
+
     return (
         <Layout>
             <div className="flex justify-center items-center flex-grow py-10">
@@ -44,7 +34,7 @@ const Login = () => {
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
-                            placeholder="phone"
+                            placeholder="Phone"
                             className="border border-gray-300 rounded-md px-2 py-1 text-primary"
                         />
                         <input
@@ -57,12 +47,14 @@ const Login = () => {
                             className="border border-gray-300 rounded-md px-2 py-1 text-primary"
                         />
                         {error && <p className="text-red-500">{error}</p>}
-                        <button type="submit" className="bg-primary text-secondary rounded-md px-2 py-1 cursor-pointer">Login</button>
+                        <button type="submit" className="bg-primary text-secondary rounded-md px-2 py-1 cursor-pointer">
+                            Login
+                        </button>
                     </form>
                 </div>
             </div>
         </Layout>
-    )
-}
+    );
+};
 
-export default Login
+export default Login;

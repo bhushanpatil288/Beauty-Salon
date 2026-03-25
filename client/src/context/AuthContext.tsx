@@ -1,4 +1,4 @@
-import { useContext, createContext, useState, useEffect, type ReactNode } from "react"
+import { useContext, createContext, useState, useEffect, type ReactNode } from "react";
 import { fetchUser, fetchAppointments } from "../api/api";
 
 interface AuthContextType {
@@ -22,32 +22,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const getUser = async () => {
             try {
                 const res = await fetchUser();
-                const loggedInUser = res.data.user || res.data;
+                // Server returns { success, message, data: userObject }
+                const loggedInUser = res.data.data ?? res.data.user ?? res.data;
                 setUser(loggedInUser);
 
                 if (loggedInUser?.role === "admin") {
                     try {
                         const apptRes = await fetchAppointments();
-                        setAppointments(apptRes.data);
+                        setAppointments(apptRes.data.data ?? apptRes.data);
                     } catch (apptErr) {
                         console.error("Failed to fetch appointments:", apptErr);
                     }
                 }
-            } catch (err) {
+            } catch {
                 setUser(null);
             } finally {
                 setLoading(false);
             }
-        }
+        };
         getUser();
-    }, [])
+    }, []);
 
     return (
         <AuthContext.Provider value={{ user, token, loading, setUser, setToken, appointments }}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
@@ -55,4 +56,4 @@ export const useAuth = () => {
         throw new Error("useAuth must be used within an AuthProvider");
     }
     return context;
-}
+};

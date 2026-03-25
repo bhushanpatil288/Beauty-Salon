@@ -1,14 +1,28 @@
 import axios from "axios";
-const baseurl = import.meta.env.VITE_API_BASE_URL;
 
+/**
+ * Pre-configured Axios instance.
+ * baseURL and withCredentials are set once here — no need to repeat them on every call.
+ */
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_BASE_URL,
+    withCredentials: true,
+});
 
-export const fetchServices = async () => await axios.get(`${baseurl}/services`);
-export const signup = async (formData: any) => await axios.post(`${baseurl}/auth/signup`, formData, { withCredentials: true });
-export const adminSignup = async (formData: any) => await axios.post(`${baseurl}/auth/signup/admin`, formData, { withCredentials: true });
-export const login = async (formData: any) => await axios.post(`${baseurl}/auth/login`, formData, { withCredentials: true });
-export const adminLogin = async (formData: any) => await axios.post(`${baseurl}/auth/login/admin`, formData, { withCredentials: true });
-export const logout = async () => await axios.post(`${baseurl}/auth/logout`, {}, { withCredentials: true });
-export const fetchUser = async () => await axios.get(`${baseurl}/auth/user`, { withCredentials: true });
-export const createAppointment = async (formData: any) => await axios.post(`${baseurl}/appointments/create`, formData, { withCredentials: true });
-export const getAppointmentsByDate = async (date: string) => await axios.get(`${baseurl}/appointments/date/${date}`, { withCredentials: true });
-export const fetchAppointments = async () => await axios.get(`${baseurl}/appointments/admin/all`, { withCredentials: true });
+// ─── Auth ────────────────────────────────────────────────────────────────────
+export const signup       = (formData: any) => api.post("/auth/signup",        formData);
+export const adminSignup  = (formData: any) => api.post("/auth/signup/admin",  formData);
+export const login        = (formData: any) => api.post("/auth/login",         formData);
+export const adminLogin   = (formData: any) => api.post("/auth/login/admin",   formData);
+export const logout       = ()              => api.post("/auth/logout",         {});
+export const fetchUser    = ()              => api.get("/auth/user");
+
+// ─── Services ─────────────────────────────────────────────────────────────────
+export const fetchServices = () => api.get("/services");
+
+// ─── Appointments ─────────────────────────────────────────────────────────────
+export const createAppointment    = (formData: any) => api.post("/appointments/create",        formData);
+export const getAppointmentsByDate = (date: string) => api.get(`/appointments/date/${date}`);
+export const fetchAppointments    = ()              => api.get("/appointments/admin/all");
+
+export default api;

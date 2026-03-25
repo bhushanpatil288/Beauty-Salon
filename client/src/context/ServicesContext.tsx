@@ -17,24 +17,24 @@ export const ServicesProvider = ({ children }: { children: React.ReactNode }) =>
     useEffect(() => {
         (async () => {
             try {
-                setLoading(true)
                 const res = await fetchServices();
-                setServices(res.data);
-                setLoading(false)
+                // Server now wraps data under res.data.data
+                setServices(res.data.data ?? res.data);
             } catch (err) {
-                console.log(err)
-                setError("Failed to fetch services")
-                setLoading(false)
+                console.error(err);
+                setError("Failed to fetch services");
+            } finally {
+                setLoading(false);
             }
-        })()
+        })();
     }, []);
 
     return (
         <ServicesContext.Provider value={{ services, loading, error }}>
             {children}
         </ServicesContext.Provider>
-    )
-}
+    );
+};
 
 export const useServices = () => {
     const context = useContext(ServicesContext);

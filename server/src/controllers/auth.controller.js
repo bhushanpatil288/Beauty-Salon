@@ -2,215 +2,113 @@ const { validationResult } = require("express-validator");
 const userModel = require("../models/user.model");
 const { hashPass, comparePass } = require("../utils/bcrypt");
 const { genToken } = require("../utils/jwt");
+const asyncHandler = require("../utils/asyncHandler");
+const ApiError = require("../utils/ApiError");
+const ApiResponse = require("../utils/ApiResponse");
 
-const signup = async (req, res) => {
-    try {
-        const error = validationResult(req);
-        if (!error.isEmpty()) {
-            return res.status(400).json({
-                message: error.array()[0].msg
-            })
-        }
+// ─── Shared Helpers ────────────────────────────────────────────────────────────
 
-        const { name, phone, email, password } = req.body;
-
-        const alreadyExists = await userModel.findOne({ phone });
-        if (alreadyExists) {
-            return res.status(409).json({
-                message: "User already exists"
-            })
-        }
-
-        const hashedPassword = await hashPass(password);
-
-        let user = {}
-        if (!email) {
-            user = { name, phone, password: hashedPassword }
-        } else {
-            user = { name, phone, email, password: hashedPassword }
-        }
-
-        const newUser = await userModel.create(user);
-        const token = await genToken(newUser._id, newUser.phone);
-
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            path: "/"
-        });
-
-        return res.status(201).json({
-            message: "User created successfully",
-            user: newUser
-        })
-
-    } catch (e) {
-        return res.status(500).json({
-            message: "Internal server error",
-            error: e.message
-        });
+/**
+ * Throws an ApiError if express-validator found validation errors.
+ */
+const checkValidation = (req) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        throw new ApiError(400, result.array()[0].msg);
     }
-}
+};
 
-const logout = async (req, res) => {
-    try {
-        res.clearCookie("token", { path: "/" });
-        return res.status(200).json({
-            message: "User logged out successfully"
-        })
-    } catch (err) {
-        return res.status(500).json({
-            message: "Internal server error",
-            error: err.message
-        });
-    }
-}
+/**
+ * Sets the JWT as an httpOnly cookie on the response.
+ */
+const setAuthCookie = (res, token) => {
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        path: "/",
+    });
+};
 
-const login = async (req, res) => {
-    try {
-        const error = validationResult(req);
-        if (!error.isEmpty) {
-            return res.status(400).json({
-                message: error.array()[0].msg
-            })
-        }
+// ─── Controllers ───────────────────────────────────────────────────────────────
 
-        const { phone, password } = req.body;
+const signup = asyncHandler(async (req, res) => {
+    checkValidation(req);
 
-        const user = await userModel.findOne({ phone });
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            })
-        }
+    const { name, phone, email, password } = req.body;
 
-        if (user.role === "admin") {
-            return res.status(403).json({
-                message: "Admin cannot login as user"
-            })
-        }
+    const alreadyExists = await userModel.findOne({ phone });
+    if (alreadyExists) throw new ApiError(409, "User already exists");
 
-        const isPasswordValid = await comparePass(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({
-                message: "Invalid password"
-            })
-        }
+    const hashedPassword = await hashPass(password);
+    const userData = email
+        ? { name, phone, email, password: hashedPassword }
+        : { name, phone, password: hashedPassword };
 
-        const token = genToken(user._id, user.phone);
+    const newUser = await userModel.create(userData);
+    const token = genToken(newUser._id, newUser.phone);
+    setAuthCookie(res, token);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            path: "/"
-        });
-        return res.status(200).json({
-            message: "User logged in successfully",
-            user: user
-        })
-    } catch (err) {
-        return res.status(500).json({
-            message: "Internal server error",
-            error: err.message
-        })
-    }
-}
+    return ApiResponse(res, 201, "User created successfully", { user: newUser });
+});
 
-const adminSignup = async (req, res) => {
-    try {
-        const error = validationResult(req);
-        if (!error.isEmpty()) {
-            return res.status(400).json({
-                message: error.array()[0].msg
-            })
-        }
+const login = asyncHandler(async (req, res) => {
+    checkValidation(req);
 
-        const { name, phone, email, password } = req.body;
+    const { phone, password } = req.body;
 
-        const alreadyExists = await userModel.findOne({ phone });
-        if (alreadyExists) {
-            return res.status(409).json({
-                message: "User already exists"
-            })
-        }
+    const user = await userModel.findOne({ phone });
+    if (!user) throw new ApiError(404, "User not found");
+    if (user.role === "admin") throw new ApiError(403, "Admin cannot login as user");
 
-        const hashedPassword = await hashPass(password);
+    const isPasswordValid = await comparePass(password, user.password);
+    if (!isPasswordValid) throw new ApiError(401, "Invalid password");
 
-        const newUser = await userModel.create({ name, phone, email, password: hashedPassword, role: "admin" });
-        const token = await genToken(newUser._id, newUser.phone);
+    const token = genToken(user._id, user.phone);
+    setAuthCookie(res, token);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            path: "/"
-        });
+    return ApiResponse(res, 200, "User logged in successfully", { user });
+});
 
-        return res.status(201).json({
-            message: "User created successfully",
-            user: newUser
-        })
+const logout = asyncHandler(async (req, res) => {
+    res.clearCookie("token", { path: "/" });
+    return ApiResponse(res, 200, "User logged out successfully");
+});
 
-    } catch (e) {
-        return res.status(500).json({
-            message: "Internal server error",
-            error: e.message
-        });
-    }
-}
+const adminSignup = asyncHandler(async (req, res) => {
+    checkValidation(req);
 
-const adminLogin = async (req, res) => {
-    try {
-        const error = validationResult(req);
-        if (!error.isEmpty()) {
-            return res.status(400).json({
-                message: error.array()[0].msg
-            })
-        }
+    const { name, phone, email, password } = req.body;
 
-        const { phone, password } = req.body;
+    const alreadyExists = await userModel.findOne({ phone });
+    if (alreadyExists) throw new ApiError(409, "User already exists");
 
-        const user = await userModel.findOne({ phone });
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            })
-        }
+    const hashedPassword = await hashPass(password);
+    const newUser = await userModel.create({
+        name, phone, email, password: hashedPassword, role: "admin",
+    });
+    const token = genToken(newUser._id, newUser.phone);
+    setAuthCookie(res, token);
 
-        if (user.role !== "admin") {
-            return res.status(403).json({
-                message: "Admin login only"
-            })
-        }
+    return ApiResponse(res, 201, "Admin created successfully", { user: newUser });
+});
 
-        const isPasswordValid = await comparePass(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({
-                message: "Invalid password"
-            })
-        }
+const adminLogin = asyncHandler(async (req, res) => {
+    checkValidation(req);
 
-        const token = genToken(user._id, user.phone);
+    const { phone, password } = req.body;
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            path: "/"
-        });
-        console.log("admin logged in");
-        return res.status(200).json({
-            message: "User logged in successfully",
-            user: user
-        })
-    } catch (err) {
-        return res.status(500).json({
-            message: "Internal server error",
-            error: err.message
-        })
-    }
-}
+    const user = await userModel.findOne({ phone });
+    if (!user) throw new ApiError(404, "User not found");
+    if (user.role !== "admin") throw new ApiError(403, "Admin login only");
 
-module.exports = { signup, logout, login, adminSignup, adminLogin }
+    const isPasswordValid = await comparePass(password, user.password);
+    if (!isPasswordValid) throw new ApiError(401, "Invalid password");
+
+    const token = genToken(user._id, user.phone);
+    setAuthCookie(res, token);
+
+    return ApiResponse(res, 200, "Admin logged in successfully", { user });
+});
+
+module.exports = { signup, logout, login, adminSignup, adminLogin };

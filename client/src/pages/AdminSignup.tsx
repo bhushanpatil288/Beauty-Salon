@@ -1,46 +1,35 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import Layout from "./Layout"
-import { adminSignup } from "../api/api"
-import { useAuth } from "../context/AuthContext"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "./Layout";
+import { adminSignup } from "../api/api";
+import { useAuth } from "../context/AuthContext";
+import useForm from "../hooks/useForm";
 
 const AdminSignup = () => {
     const navigate = useNavigate();
-    const { setUser, setToken } = useAuth();
-    const [error, setError] = useState({} as any);
-    const [formData, setFormData] = useState({
+    const { setUser } = useAuth();
+    const [error, setError] = useState("");
+    const { formData, handleChange, setFormData } = useForm({
         name: "",
         secretKey: "",
         phone: "",
         email: "",
-        password: ""
-    })
+        password: "",
+    });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        })
-    }
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        (async () => {
-            try {
-                const res = await adminSignup(formData);
-                setUser(res.data.user);
-                setToken(res.data.token);
-                navigate("/services");
-                setError({});
-                setFormData({ name: "", secretKey: "", phone: "", email: "", password: "" })
-            } catch (error: any) {
-                if (error.response.status === 409) {
-                    setError({ ...error, userExists: "User Already Exists" })
-                }
-                console.log(error.response.status)
-            }
-        })()
-    }
+        try {
+            const res = await adminSignup(formData);
+            setUser(res.data.data.user);
+            setFormData({ name: "", secretKey: "", phone: "", email: "", password: "" });
+            navigate("/admin/dashboard");
+        } catch (err: any) {
+            setError(err.response?.data?.message ?? "Signup failed");
+            setTimeout(() => setError(""), 2000);
+        }
+    };
+
     return (
         <Layout>
             <div className="flex justify-center items-center flex-grow py-10">
@@ -66,9 +55,8 @@ const AdminSignup = () => {
                             type="password"
                             id="secretKey"
                             name="secretKey"
-                            placeholder="secret key"
+                            placeholder="Secret Key"
                             required
-                            autoComplete="secret key"
                             className="border border-gray-300 rounded-md px-2 py-1"
                         />
                         <label htmlFor="phone" className="text-primary">Phone</label>
@@ -78,7 +66,7 @@ const AdminSignup = () => {
                             type="number"
                             id="phone"
                             name="phone"
-                            placeholder="phone"
+                            placeholder="Phone"
                             required
                             className="border border-gray-300 rounded-md px-2 py-1"
                         />
@@ -89,7 +77,7 @@ const AdminSignup = () => {
                             type="email"
                             id="email"
                             name="email"
-                            placeholder="email"
+                            placeholder="Email"
                             className="border border-gray-300 rounded-md px-2 py-1"
                         />
                         <label htmlFor="password" className="text-primary">Password</label>
@@ -99,18 +87,20 @@ const AdminSignup = () => {
                             type="password"
                             id="password"
                             name="password"
-                            placeholder="password"
+                            placeholder="Password"
                             autoComplete="current-password"
                             required
                             className="border border-gray-300 rounded-md px-2 py-1"
                         />
-                        <button type="submit" className="bg-primary text-secondary rounded-md px-2 py-1 cursor-pointer">Signup</button>
-                        {error.userExists && <p className="text-red-500 text-center">{error.userExists}</p>}
+                        <button type="submit" className="bg-primary text-secondary rounded-md px-2 py-1 cursor-pointer">
+                            Signup
+                        </button>
+                        {error && <p className="text-red-500 text-center">{error}</p>}
                     </form>
                 </div>
             </div>
         </Layout>
-    )
-}
+    );
+};
 
-export default AdminSignup
+export default AdminSignup;
