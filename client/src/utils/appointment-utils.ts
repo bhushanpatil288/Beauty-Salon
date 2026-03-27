@@ -4,7 +4,10 @@ const timeToMinutes = (time: string) => {
 }
 
 function getBlockedRanges(appointments: any[]) {
-    return appointments.map(app => {
+    if (!Array.isArray(appointments)) return [];
+    return appointments
+        .filter(app => app.status !== 'cancelled')
+        .map(app => {
         const start = timeToMinutes(app.time);
         const end = start + Number(app.duration);
 

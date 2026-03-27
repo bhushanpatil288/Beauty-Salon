@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const status = ['booked', 'completed', 'cancelled'];
+const status = ['booked', 'pending', 'completed', 'cancelled'];
 
 const appointmentModel = mongoose.Schema({
     userId: {
@@ -18,7 +18,7 @@ const appointmentModel = mongoose.Schema({
     status: {
         type: String,
         enum: status,
-        default: 'booked',
+        default: 'pending',
     },
     notes: {
         type: String,

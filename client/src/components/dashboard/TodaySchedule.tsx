@@ -3,7 +3,7 @@ import { useMemo } from "react";
 interface Appointment {
     _id: string;
     userId?: { name?: string };
-    serviceId?: string;
+    serviceId?: { heading?: string } | string;
     date?: string;
     time?: string;
     status?: string;
@@ -45,7 +45,7 @@ const TodaySchedule = ({ appointments }: TodayScheduleProps) => {
                                     <p className="text-sm font-medium text-foreground">
                                         {appt.userId?.name ?? "Unknown Client"}
                                     </p>
-                                    <p className="text-xs text-muted-foreground">{appt.serviceId ?? "Service"}</p>
+                                    <p className="text-xs text-muted-foreground">{typeof appt.serviceId === "object" ? appt.serviceId?.heading : (appt.serviceId ?? "Service")}</p>
                                 </div>
                             </div>
                         </div>

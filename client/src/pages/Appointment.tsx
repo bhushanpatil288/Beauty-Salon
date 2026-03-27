@@ -70,7 +70,7 @@ export default function Appointment() {
     if (formData.date) {
       getAppointmentsByDate(formData.date)
         .then((res) => {
-          setBlockedRanges(getBlockedRanges(res.data));
+          setBlockedRanges(getBlockedRanges(res.data?.data ?? res.data));
         })
         .catch(console.error);
     } else {

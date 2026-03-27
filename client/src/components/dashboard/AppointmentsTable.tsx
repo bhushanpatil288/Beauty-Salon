@@ -4,7 +4,11 @@ import { User, CalendarDays, Clock, Tag, FileText, Scissors } from "lucide-react
 interface Appointment {
     _id: string;
     userId?: { name?: string; phone?: string };
-    serviceId?: string;
+    serviceId?: {
+        heading?: string;
+        subHeading?: string;
+        price?: number;
+    };
     date?: string;
     time?: string;
     duration?: number;
@@ -30,6 +34,7 @@ const statusStyles: Record<string, string> = {
 /** Map "booked" to the "confirmed" display label — adjust as your data requires */
 const displayStatus = (status?: string) => {
     if (status === "booked") return "Confirmed";
+    if (status === "pending") return "Pending";
     return status ? status.charAt(0).toUpperCase() + status.slice(1) : "—";
 };
 
@@ -116,7 +121,11 @@ const AppointmentsTable = ({ appointments }: AppointmentsTableProps) => {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-5 py-3 text-foreground">{appt.serviceId ?? "—"}</td>
+                                    <td className="px-5 py-3 text-foreground">
+                                        {typeof appt.serviceId === "object"
+                                            ? appt.serviceId?.heading
+                                            : "—"}
+                                    </td>
                                     <td className="px-5 py-3 text-foreground">{appt.time ?? "—"}</td>
                                     <td className="px-5 py-3 text-foreground">
                                         {appt.date

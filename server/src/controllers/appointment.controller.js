@@ -7,6 +7,8 @@ const showAllAppointments = asyncHandler(async (req, res) => {
     const appointments = await Appointment.find().populate({
         path: "userId",
         select: "-password",
+    }).populate({
+        path: "serviceId"
     });
     return ApiResponse(res, 200, "Appointments fetched successfully", appointments);
 });
@@ -24,7 +26,7 @@ const createAppointment = asyncHandler(async (req, res) => {
         time,
         notes,
         duration,
-        status: "booked",
+        status: "pending",
     });
     return ApiResponse(res, 201, "Appointment booked successfully", newAppointment);
 });
