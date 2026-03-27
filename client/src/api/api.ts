@@ -24,5 +24,6 @@ export const fetchServices = () => api.get("/services");
 export const createAppointment    = (formData: any) => api.post("/appointments/create",        formData);
 export const getAppointmentsByDate = (date: string) => api.get(`/appointments/date/${date}`);
 export const fetchAppointments    = ()              => api.get("/appointments/admin/all");
+export const updateAppointmentStatus = (id: string, status: string) => api.patch(`/appointments/admin/${id}/status`, { status });
 
 export default api;

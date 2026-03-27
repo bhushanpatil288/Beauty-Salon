@@ -44,4 +44,21 @@ const getAppointmentsByDate = asyncHandler(async (req, res) => {
     return ApiResponse(res, 200, "Appointments fetched successfully", appointments);
 });
 
-module.exports = { showAllAppointments, createAppointment, getAppointmentsByDate };
+const updateAppointmentStatus = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    if (!status) throw new ApiError(400, "Status is required");
+
+    const appointment = await Appointment.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true, runValidators: true }
+    );
+
+    if (!appointment) throw new ApiError(404, "Appointment not found");
+
+    return ApiResponse(res, 200, "Appointment status updated", appointment);
+});
+
+module.exports = { showAllAppointments, createAppointment, getAppointmentsByDate, updateAppointmentStatus };

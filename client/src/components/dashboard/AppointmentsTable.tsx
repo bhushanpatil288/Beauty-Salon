@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
-import { User, CalendarDays, Clock, Tag, FileText, Scissors } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { User, CalendarDays, Clock, Tag, FileText, Scissors, MoreHorizontal } from "lucide-react";
+import { updateAppointmentStatus } from "../../api/api";
 
 interface Appointment {
     _id: string;
@@ -38,8 +39,29 @@ const displayStatus = (status?: string) => {
     return status ? status.charAt(0).toUpperCase() + status.slice(1) : "—";
 };
 
-const AppointmentsTable = ({ appointments }: AppointmentsTableProps) => {
+const AppointmentsTable = ({ appointments: initialAppointments }: AppointmentsTableProps) => {
+    const [appointments, setAppointments] = useState(initialAppointments);
     const [activeFilter, setActiveFilter] = useState<FilterTab>("All");
+    const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+    useEffect(() => {
+        setAppointments(initialAppointments);
+    }, [initialAppointments]);
+
+    const handleStatusChange = async (id: string, newStatus: string) => {
+        try {
+            setUpdatingId(id);
+            await updateAppointmentStatus(id, newStatus);
+            setAppointments((prev) =>
+                prev.map((appt) => (appt._id === id ? { ...appt, status: newStatus } : appt))
+            );
+        } catch (error) {
+            console.error("Failed to update status", error);
+            alert("Failed to update status");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
 
     const filtered = useMemo(() => {
         if (activeFilter === "All") return appointments;
@@ -106,6 +128,9 @@ const AppointmentsTable = ({ appointments }: AppointmentsTableProps) => {
                                 <th className="px-5 py-3 text-left">
                                     <span className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5" /> Notes</span>
                                 </th>
+                                <th className="px-5 py-3 text-left">
+                                    <span className="flex items-center gap-1.5"><MoreHorizontal className="w-3.5 h-3.5" /> Action</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border">
@@ -142,6 +167,19 @@ const AppointmentsTable = ({ appointments }: AppointmentsTableProps) => {
                                     </td>
                                     <td className="px-5 py-3 text-foreground">{appt.duration ? `${appt.duration} min` : "—"}</td>
                                     <td className="px-5 py-3 text-muted-foreground max-w-[180px] truncate">{appt.notes || "—"}</td>
+                                    <td className="px-5 py-3">
+                                        <select
+                                            disabled={updatingId === appt._id}
+                                            value={appt.status || "pending"}
+                                            onChange={(e) => handleStatusChange(appt._id, e.target.value)}
+                                            className="bg-muted text-xs font-medium px-2 py-1.5 rounded-md border border-border focus:outline-none focus:ring-1 focus:ring-stone-800 disabled:opacity-50 cursor-pointer"
+                                        >
+                                            <option value="pending">Pending</option>
+                                            <option value="booked">Confirmed</option>
+                                            <option value="completed">Completed</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
