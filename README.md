@@ -1,5 +1,13 @@
 # Beauty Salon
 
+<div align="center">
+  <img src="docs/images/HOME-PAGE.png" alt="Home Page" width="48%">
+  <img src="docs/images/SERVICES-PAGE.png" alt="Services Page" width="48%">
+  <br>
+  <img src="docs/images/BOOKING-PAGE.png" alt="Booking Page" width="48%">
+  <img src="docs/images/DASHBOARD.png" alt="Dashboard" width="48%">
+</div>
+
 A full-stack salon appointment booking system built with the MERN stack (MongoDB, Express, React, Node.js). This application enables customers to browse available services and book appointments, while providing salon owners with a dedicated admin portal to manage bookings.
 
 ## Recent Updates

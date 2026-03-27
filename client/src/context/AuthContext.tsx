@@ -25,15 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 // Server returns { success, message, data: userObject }
                 const loggedInUser = res.data.data ?? res.data.user ?? res.data;
                 setUser(loggedInUser);
-
-                if (loggedInUser?.role === "admin") {
-                    try {
-                        const apptRes = await fetchAppointments();
-                        setAppointments(apptRes.data.data ?? apptRes.data);
-                    } catch (apptErr) {
-                        console.error("Failed to fetch appointments:", apptErr);
-                    }
-                }
             } catch {
                 setUser(null);
             } finally {
@@ -42,6 +33,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
         getUser();
     }, []);
+
+    useEffect(() => {
+        if (user?.role === "admin") {
+            const getAppointments = async () => {
+                try {
+                    const apptRes = await fetchAppointments();
+                    setAppointments(apptRes.data.data ?? apptRes.data);
+                } catch (apptErr) {
+                    console.error("Failed to fetch appointments:", apptErr);
+                }
+            };
+            getAppointments();
+        } else {
+            setAppointments([]);
+        }
+    }, [user]);
 
     return (
         <AuthContext.Provider value={{ user, token, loading, setUser, setToken, appointments }}>

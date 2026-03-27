@@ -5,9 +5,9 @@ import Layout from "./Layout";
 import { useServices } from "../context/ServicesContext";
 import { createAppointment, getAppointmentsByDate } from "../api/api";
 import { getBlockedRanges } from "../utils/appointment-utils";
-import AppointmentHeader from "../components/CustomComponenents/AppointmentPage/AppointmentHeader";
-import AppointmentSuccess from "../components/CustomComponenents/AppointmentPage/AppointmentSuccess";
-import AppointmentForm from "../components/CustomComponenents/AppointmentPage/AppointmentForm";
+import AppointmentHeader from "../components/features/AppointmentPage/AppointmentHeader";
+import AppointmentSuccess from "../components/features/AppointmentPage/AppointmentSuccess";
+import AppointmentForm from "../components/features/AppointmentPage/AppointmentForm";
 
 export default function Appointment() {
   const { services, loading: servicesLoading } = useServices();

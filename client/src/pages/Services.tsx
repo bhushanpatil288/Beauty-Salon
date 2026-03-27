@@ -1,5 +1,5 @@
 import Layout from "./Layout"
-import ServicesCard from "../components/CustomComponenents/services/ServicesCard"
+import ServicesCard from "../components/features/services/ServicesCard"
 import { useServices } from "../context/ServicesContext";
 
 const Services = () => {

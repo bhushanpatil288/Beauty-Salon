@@ -1,4 +1,4 @@
-import { HeroSection, ServicesSection } from "../components/CustomComponenents/HomePage"
+import { HeroSection, ServicesSection } from "../components/features/HomePage"
 import Layout from "./Layout"
 
 
