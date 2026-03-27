@@ -12,6 +12,8 @@ A full-stack salon appointment booking system built with the MERN stack (MongoDB
 
 ## Recent Updates
 
+- **Interactive Status Management**: Upgraded the Admin Dashboard appointments table with an inline "Action" column to instantly change appointment statuses (Pending, Confirmed, Completed, Cancelled). Updates are made optimistically in the UI and persisted via a new `PATCH /appointments/admin/:id/status` endpoint.
+- **Improved Booking Logic**: New appointments now default to a `pending` state. The scheduling algorithm was updated to properly parse populated service data and aggressively ignore `cancelled` appointments, thereby freeing up time slots.
 - **Admin Dashboard**: Built a fully functional `AdminDashboard.tsx` page at `/admin/dashboard` showing live appointment stats (booked / completed / cancelled counts) and a full appointments table with customer name, phone, date, time, color-coded status badge, duration, and notes. Appointments are populated server-side with user data via Mongoose `.populate()`.
 - **Admin Route Guards**: Added a dedicated `src/routes/` folder containing `ProtectedRoute.tsx` (user auth) and `AdminProtectedRoute.tsx` (admin-only — redirects non-admins to home and unauthenticated users to `/login/admin`). Both exported from a barrel `index.ts`.
 - **`adminAuth` Middleware**: Added server-side `adminAuth` middleware that validates the JWT cookie and enforces `role === "admin"` before granting access to admin-only endpoints.
@@ -100,7 +102,7 @@ The React app will be available at `http://localhost:5173`.
 ## Core Features
 
 - **Customer Portal**: Browse salon services and book appointments with real-time availability checking.
-- **Admin Dashboard**: Live stats and a full appointments table (customer details, date, time, status, duration, notes). Admin-only — protected by `AdminProtectedRoute` on the frontend and `adminAuth` middleware on the backend.
+- **Admin Dashboard**: Live stats and a full appointments table (customer details, date, time, status, duration, notes). Includes inline status management (Pending/Confirmed/Completed/Cancelled) which dynamically updates the database. Admin-only — protected by `AdminProtectedRoute` on the frontend and `adminAuth` middleware on the backend.
 - **Role-Based Auth**: User model supports `"user"` and `"admin"` roles. Dedicated route guards (`ProtectedRoute`, `AdminProtectedRoute`) in `src/routes/` and server-side middleware enforce access per role.
 - **Authentication & State**: Secure HttpOnly cookie-based JWT. `AuthContext` manages user + appointments state globally, and auto-fetches admin appointments on session restore.
 - **Appointment Timeslot Blocking**: Prevents overlapping bookings based on service duration and existing appointments for a given date.
@@ -142,6 +144,7 @@ The React app will be available at `http://localhost:5173`.
 | `GET` | `/appointments/date/:date` | Public | Get appointments for a specific date |
 | `POST` | `/appointments/create` | User | Create a new appointment |
 | `GET` | `/appointments/admin/all` | Admin | List all appointments (with user details) |
+| `PATCH` | `/appointments/admin/:id/status` | Admin | Update appointment status |
 
 #### Auth
 | Method | Endpoint | Description |
