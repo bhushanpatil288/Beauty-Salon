@@ -8,10 +8,10 @@ import type { Appointment } from "../../types";
 
 // ─── Status badge helper ───────────────────────────────────────────────────────
 const statusConfig: Record<string, { label: string; className: string; icon: React.ReactNode }> = {
-    pending:   { label: "Pending",   className: "bg-amber-50 text-amber-700 border-amber-200",  icon: <AlertCircle  className="w-3 h-3" /> },
-    booked:    { label: "Confirmed", className: "bg-blue-50 text-blue-700 border-blue-200",     icon: <CheckCircle2 className="w-3 h-3" /> },
+    pending: { label: "Pending", className: "bg-amber-50 text-amber-700 border-amber-200", icon: <AlertCircle className="w-3 h-3" /> },
+    booked: { label: "Confirmed", className: "bg-blue-50 text-blue-700 border-blue-200", icon: <CheckCircle2 className="w-3 h-3" /> },
     completed: { label: "Completed", className: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: <CheckCircle2 className="w-3 h-3" /> },
-    cancelled: { label: "Cancelled", className: "bg-red-50 text-red-600 border-red-200",        icon: <XCircle      className="w-3 h-3" /> },
+    cancelled: { label: "Cancelled", className: "bg-red-50 text-red-600 border-red-200", icon: <XCircle className="w-3 h-3" /> },
 };
 
 const StatusBadge = ({ status }: { status: string }) => {
@@ -112,15 +112,15 @@ const MyAppointments = () => {
     const past = userList.filter((a) => a.status === "completed" || a.status === "cancelled");
 
     return (
-        <Card className="shadow-sm border-secondary/50 mt-6">
-            <CardHeader className="pb-4">
+        <Card className="shadow-sm border-secondary/50 h-full flex flex-col">
+            <CardHeader className="pb-4 shrink-0">
                 <div className="flex items-center gap-2">
                     <CalendarDays className="w-5 h-5 text-primary" />
                     <CardTitle className="text-xl font-bold">My Appointments</CardTitle>
                 </div>
                 <CardDescription>View and manage your bookings</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 flex-1 overflow-y-auto pr-2">
                 {cancelError && (
                     <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
                         <XCircle className="w-4 h-4 flex-shrink-0" />
@@ -200,75 +200,85 @@ const Profile = () => {
 
     return (
         <Layout>
-            <div className="container mx-auto max-w-2xl py-12 px-4">
-                {/* Profile info card */}
-                <Card className="shadow-sm border-secondary/50">
-                    <CardHeader className="text-center pb-6">
-                        <div className="w-24 h-24 mx-auto bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
-                            <span className="text-4xl font-semibold tracking-tight">{user.name?.charAt(0).toUpperCase() || 'U'}</span>
-                        </div>
-                        <CardTitle className="text-3xl font-bold">{user.name}</CardTitle>
-                        <CardDescription className="text-base mt-2 font-medium capitalize">
-                            {user.role || 'Customer'}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        <div className="flex flex-col gap-4">
-                            <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
-                                <User className="w-6 h-6 text-primary" />
-                                <div>
-                                    <p className="text-sm font-medium text-muted-foreground">Full Name</p>
-                                    <p className="text-base font-semibold">{user.name}</p>
+            <div className="container mx-auto py-12 px-4">
+                <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 h-full">
+                    {/* Profile info card */}
+                    <div className="w-full lg:w-[35%] xl:w-[30%] shrink-0">
+                        <Card className="shadow-sm border-secondary/50 w-full h-full">
+                            <CardHeader className="text-center pb-6">
+                                <div className="w-24 h-24 mx-auto bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+                                    <span className="text-4xl font-semibold tracking-tight">{user.name?.charAt(0).toUpperCase() || 'U'}</span>
                                 </div>
-                            </div>
-
-                            <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
-                                <Mail className="w-6 h-6 text-primary" />
-                                <div>
-                                    <p className="text-sm font-medium text-muted-foreground">Email Address</p>
-                                    <p className="text-base font-semibold">{user.email}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
-                                <Phone className="w-6 h-6 text-primary" />
-                                <div>
-                                    <p className="text-sm font-medium text-muted-foreground">Phone Number</p>
-                                    <p className="text-base font-semibold">{user.phone || 'Not provided'}</p>
-                                </div>
-                            </div>
-
-                            {user.role && (
-                                <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
-                                    <ShieldCheck className="w-6 h-6 text-primary" />
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Account Role</p>
-                                        <p className="text-base font-semibold capitalize">{user.role}</p>
+                                <CardTitle className="text-3xl font-bold">{user.name}</CardTitle>
+                                <CardDescription className="text-base mt-2 font-medium capitalize">
+                                    {user.role || 'Customer'}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
+                                        <User className="w-6 h-6 text-primary" />
+                                        <div>
+                                            <p className="text-sm font-medium text-muted-foreground">Full Name</p>
+                                            <p className="text-base font-semibold">{user.name}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
 
-                            {user.createdAt && (
-                                <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
-                                    <CalendarDays className="w-6 h-6 text-primary" />
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Member Since</p>
-                                        <p className="text-base font-semibold">
-                                            {new Date(user.createdAt).toLocaleDateString(undefined, {
-                                                year: 'numeric',
-                                                month: 'long',
-                                                day: 'numeric'
-                                            })}
-                                        </p>
+                                    <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
+                                        <Mail className="w-6 h-6 text-primary" />
+                                        <div>
+                                            <p className="text-sm font-medium text-muted-foreground">Email Address</p>
+                                            <p className="text-base font-semibold">{user.email}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
 
-                {/* My Appointments section — only for regular users */}
-                {user.role !== "admin" && <MyAppointments />}
+                                    <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
+                                        <Phone className="w-6 h-6 text-primary" />
+                                        <div>
+                                            <p className="text-sm font-medium text-muted-foreground">Phone Number</p>
+                                            <p className="text-base font-semibold">{user.phone || 'Not provided'}</p>
+                                        </div>
+                                    </div>
+
+                                    {user.role && (
+                                        <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
+                                            <ShieldCheck className="w-6 h-6 text-primary" />
+                                            <div>
+                                                <p className="text-sm font-medium text-muted-foreground">Account Role</p>
+                                                <p className="text-base font-semibold capitalize">{user.role}</p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {user.createdAt && (
+                                        <div className="flex items-center space-x-4 p-4 rounded-xl bg-secondary/20 border border-secondary/50">
+                                            <CalendarDays className="w-6 h-6 text-primary" />
+                                            <div>
+                                                <p className="text-sm font-medium text-muted-foreground">Member Since</p>
+                                                <p className="text-base font-semibold">
+                                                    {new Date(user.createdAt).toLocaleDateString(undefined, {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric'
+                                                    })}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* My Appointments section — only for regular users */}
+                    {user.role !== "admin" && (
+                        <div className="w-full lg:w-[65%] xl:w-[70%] relative">
+                            <div className="lg:absolute lg:inset-0 w-full h-full">
+                                <MyAppointments />
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </Layout>
     )
