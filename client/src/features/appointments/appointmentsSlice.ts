@@ -24,7 +24,9 @@ const initialState: AppointmentsState = {
     error: null,
 };
 
-// Fetch all appointments (admin)
+/**
+ * @desc Deep fetches all appointments. Only accessible if JWT signifies admin role.
+ */
 export const fetchAdminAppointments = createAsyncThunk(
     "appointments/fetchAdminAppointments",
     async (_, { rejectWithValue }) => {
@@ -37,7 +39,9 @@ export const fetchAdminAppointments = createAsyncThunk(
     }
 );
 
-// Fetch logged-in user's own appointments
+/**
+ * @desc Deep fetches appointments strictly for the current user's profile dashboard.
+ */
 export const fetchUserAppointments = createAsyncThunk(
     "appointments/fetchUserAppointments",
     async (_, { rejectWithValue }) => {
@@ -50,7 +54,9 @@ export const fetchUserAppointments = createAsyncThunk(
     }
 );
 
-// Cancel a user's own appointment
+/**
+ * @desc Triggers user cancellation and handles potential generic backend constraints.
+ */
 export const cancelAppointment = createAsyncThunk(
     "appointments/cancelAppointment",
     async (id: string, { rejectWithValue }) => {
@@ -65,7 +71,9 @@ export const cancelAppointment = createAsyncThunk(
     }
 );
 
-// Admin: update appointment status
+/**
+ * @desc Specific logic enabling async modifications (ie. Pending => Confirmed) from the internal dashboard tracking.
+ */
 export const updateAppointmentStatus = createAsyncThunk(
     "appointments/updateStatus",
     async ({ id, status }: { id: string; status: string }, { rejectWithValue }) => {

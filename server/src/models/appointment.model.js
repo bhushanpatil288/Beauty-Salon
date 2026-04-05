@@ -1,5 +1,17 @@
+/**
+ * @file appointment.model.js
+ * @description Mongoose schema for salon appointments. 
+ * Links a User (userId) and a Service (serviceId). Tracks booking date/time and current lifecycle status.
+ */
 const mongoose = require("mongoose");
 
+/**
+ * Valid lifecycle statuses for an appointment:
+ * - booked: Initial state (legacy)
+ * - pending: Default state when a user first schedules
+ * - completed: Service has been rendered
+ * - cancelled: User or Admin cancelled the appointment
+ */
 const status = ['booked', 'pending', 'completed', 'cancelled'];
 
 const appointmentModel = mongoose.Schema({

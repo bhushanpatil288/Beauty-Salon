@@ -1,3 +1,8 @@
+/**
+ * @file AppointmentsTable.tsx
+ * @description A comprehensive, filterable data-grid for displaying salon appointments.
+ * Primarily used within the Admin Dashboard to securely read, render, and optimistically mutate appointment lifecycles.
+ */
 import { useState, useMemo } from "react";
 import { User, CalendarDays, Clock, Tag, FileText, Scissors, MoreHorizontal, Loader2 } from "lucide-react";
 import type { Appointment } from "../../types";

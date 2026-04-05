@@ -1,3 +1,8 @@
+/**
+ * @file api.ts
+ * @description Centralized Axios configuration and unified external API surface. 
+ * Allows all frontend slices and components to easily communicate with backend controllers.
+ */
 import axios from "axios";
 
 /**

@@ -14,6 +14,9 @@ const initialState: ServicesState = {
     error: null,
 };
 
+/**
+ * @desc Fetches the core set of globally available salon services to build the catalog lists.
+ */
 export const fetchServices = createAsyncThunk(
     "services/fetchServices",
     async (_, { rejectWithValue }) => {

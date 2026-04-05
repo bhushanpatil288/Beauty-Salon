@@ -1,3 +1,8 @@
+/**
+ * @file user.model.js
+ * @description Mongoose schema for user accounts. 
+ * Supports both regular customers and salon administrators via the 'role' field.
+ */
 const mongoose = require("mongoose");
 
 

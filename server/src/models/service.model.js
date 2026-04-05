@@ -1,3 +1,8 @@
+/**
+ * @file service.model.js
+ * @description Mongoose schema for available salon services. 
+ * Includes descriptive headings, pricing, and required duration in minutes.
+ */
 const mongoose = require('mongoose');
 
 const serviceSchema = new mongoose.Schema({

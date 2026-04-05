@@ -3,6 +3,10 @@ const asyncHandler = require("../utils/asyncHandler");
 const ApiError = require("../utils/ApiError");
 const ApiResponse = require("../utils/ApiResponse");
 
+/**
+ * @desc Fetches all appointments (Admin only). Deep populates user and service schema data. Note: User password explicitely excluded.
+ * @route GET /appointments/admin/all
+ */
 const showAllAppointments = asyncHandler(async (req, res) => {
     const appointments = await Appointment.find().populate({
         path: "userId",
@@ -13,6 +17,10 @@ const showAllAppointments = asyncHandler(async (req, res) => {
     return ApiResponse(res, 200, "Appointments fetched successfully", appointments);
 });
 
+/**
+ * @desc Schedules an appointment for the authenticated user initializing default state to 'pending'.
+ * @route POST /appointments/create
+ */
 const createAppointment = asyncHandler(async (req, res) => {
     const { serviceId, date, time, notes, duration } = req.body;
     if (!serviceId || !date || !time) {
@@ -31,6 +39,10 @@ const createAppointment = asyncHandler(async (req, res) => {
     return ApiResponse(res, 201, "Appointment booked successfully", newAppointment);
 });
 
+/**
+ * @desc Used prominently by the frontend scheduler matrix to identify blocked time slots by fetching a day's schedule.
+ * @route GET /appointments/date/:date
+ */
 const getAppointmentsByDate = asyncHandler(async (req, res) => {
     const start = new Date(req.params.date);
     if (isNaN(start.getTime())) throw new ApiError(400, "Invalid date format");
@@ -44,6 +56,10 @@ const getAppointmentsByDate = asyncHandler(async (req, res) => {
     return ApiResponse(res, 200, "Appointments fetched successfully", appointments);
 });
 
+/**
+ * @desc Admin action to immediately change lifecycle tracker status of an appointment constraint (ie., Pending -> Confirmed).
+ * @route PATCH /appointments/admin/:id/status
+ */
 const updateAppointmentStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
@@ -61,6 +77,10 @@ const updateAppointmentStatus = asyncHandler(async (req, res) => {
     return ApiResponse(res, 200, "Appointment status updated", appointment);
 });
 
+/**
+ * @desc Retrieves booking history specific exclusively to logged-in user. Populates Service references.
+ * @route GET /appointments/user
+ */
 const getUserAppointments = asyncHandler(async (req, res) => {
     const appointments = await Appointment.find({ userId: req.user._id })
         .populate({ path: "serviceId" })
@@ -68,6 +88,10 @@ const getUserAppointments = asyncHandler(async (req, res) => {
     return ApiResponse(res, 200, "User appointments fetched successfully", appointments);
 });
 
+/**
+ * @desc Safe self-cancellation. Checks existing database statuses actively protecting against retroactive cancelling.
+ * @route PATCH /appointments/user/:id/cancel
+ */
 const cancelUserAppointment = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const appointment = await Appointment.findOne({ _id: id, userId: req.user._id });

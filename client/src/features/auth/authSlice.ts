@@ -15,7 +15,10 @@ const initialState: AuthState = {
     error: null,
 };
 
-// Thunk: fetch the currently logged-in user from the server on app mount
+/**
+ * @desc Async thunk used extensively to initialize/check active sessions when the React application loads.
+ * Dispatches a backend API call to fetch active user based on JWT presence.
+ */
 export const initAuth = createAsyncThunk("auth/initAuth", async (_, { rejectWithValue }) => {
     try {
         const res = await fetchUser();

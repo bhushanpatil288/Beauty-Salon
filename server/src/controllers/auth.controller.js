@@ -32,6 +32,10 @@ const setAuthCookie = (res, token) => {
 
 // ─── Controllers ───────────────────────────────────────────────────────────────
 
+/**
+ * @desc Registers a new regular user. Checks for existing phone, hashes password, and issues JWT cookie.
+ * @route POST /auth/signup
+ */
 const signup = asyncHandler(async (req, res) => {
     checkValidation(req);
 
@@ -52,6 +56,10 @@ const signup = asyncHandler(async (req, res) => {
     return ApiResponse(res, 201, "User created successfully", { user: newUser });
 });
 
+/**
+ * @desc Authenticates a regular user. Explicitly blocks admins from logging in via this user route.
+ * @route POST /auth/login
+ */
 const login = asyncHandler(async (req, res) => {
     checkValidation(req);
 
@@ -70,11 +78,19 @@ const login = asyncHandler(async (req, res) => {
     return ApiResponse(res, 200, "User logged in successfully", { user });
 });
 
+/**
+ * @desc Logs out the current user or admin by forcibly clearing the JWT cookie.
+ * @route POST /auth/logout
+ */
 const logout = asyncHandler(async (req, res) => {
     res.clearCookie("token", { path: "/" });
     return ApiResponse(res, 200, "User logged out successfully");
 });
 
+/**
+ * @desc Registers an administrator. Requires a unique, server-side valid 'secretKey'.
+ * @route POST /auth/signup/admin
+ */
 const adminSignup = asyncHandler(async (req, res) => {
     checkValidation(req);
 
@@ -93,6 +109,10 @@ const adminSignup = asyncHandler(async (req, res) => {
     return ApiResponse(res, 201, "Admin created successfully", { user: newUser });
 });
 
+/**
+ * @desc Authenticates an administrator. Blocks regular users from utilizing this route.
+ * @route POST /auth/login/admin
+ */
 const adminLogin = asyncHandler(async (req, res) => {
     checkValidation(req);
 
