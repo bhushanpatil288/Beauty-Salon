@@ -1,22 +1,23 @@
-import Layout from "./Layout";
+import Layout from "../../components/layout/PublicLayout";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/api";
-import useForm from "../hooks/useForm";
+import { adminLogin } from "../../api/api";
+import { useAppDispatch } from "../../app/hooks";
+import { setUser } from "../../features/auth/authSlice";
+import useForm from "../../hooks/useForm";
 
-const Login = () => {
-    const { setUser } = useAuth();
+const AdminLogin = () => {
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [error, setError] = useState("");
-    const { formData, handleChange } = useForm({ phone: "", password: "" });
+    const { formData, handleChange } = useForm({ phone: "", secretKey: "", password: "" });
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await login(formData);
-            setUser(response.data.data.user);
-            navigate("/");
+            const response = await adminLogin(formData);
+            dispatch(setUser(response.data.data.user));
+            navigate("/admin/dashboard");
         } catch (e: any) {
             setError(e.response?.data?.message ?? "Login failed");
             setTimeout(() => setError(""), 2000);
@@ -27,7 +28,7 @@ const Login = () => {
         <Layout>
             <div className="flex justify-center items-center flex-grow py-10">
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-2xl font-bold text-primary">Login</h1>
+                    <h1 className="text-2xl font-bold text-primary">Admin Login</h1>
                     <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                         <input
                             type="number"
@@ -35,6 +36,15 @@ const Login = () => {
                             value={formData.phone}
                             onChange={handleChange}
                             placeholder="Phone"
+                            className="border border-gray-300 rounded-md px-2 py-1 text-primary"
+                        />
+                        <input
+                            type="password"
+                            name="secretKey"
+                            value={formData.secretKey}
+                            onChange={handleChange}
+                            placeholder="Secret Key"
+                            required
                             className="border border-gray-300 rounded-md px-2 py-1 text-primary"
                         />
                         <input
@@ -57,4 +67,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default AdminLogin;

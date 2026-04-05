@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Layout from "./Layout";
-import { adminSignup } from "../api/api";
-import { useAuth } from "../context/AuthContext";
-import useForm from "../hooks/useForm";
+import Layout from "../../components/layout/PublicLayout";
+import { adminSignup } from "../../api/api";
+import { useAppDispatch } from "../../app/hooks";
+import { setUser } from "../../features/auth/authSlice";
+import useForm from "../../hooks/useForm";
 
 const AdminSignup = () => {
     const navigate = useNavigate();
-    const { setUser } = useAuth();
+    const dispatch = useAppDispatch();
     const [error, setError] = useState("");
     const { formData, handleChange, setFormData } = useForm({
         name: "",
@@ -21,7 +22,7 @@ const AdminSignup = () => {
         e.preventDefault();
         try {
             const res = await adminSignup(formData);
-            setUser(res.data.data.user);
+            dispatch(setUser(res.data.data.user));
             setFormData({ name: "", secretKey: "", phone: "", email: "", password: "" });
             navigate("/admin/dashboard");
         } catch (err: any) {

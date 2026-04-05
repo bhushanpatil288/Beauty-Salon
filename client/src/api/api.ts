@@ -23,6 +23,8 @@ export const fetchServices = () => api.get("/services");
 // ─── Appointments ─────────────────────────────────────────────────────────────
 export const createAppointment    = (formData: any) => api.post("/appointments/create",        formData);
 export const getAppointmentsByDate = (date: string) => api.get(`/appointments/date/${date}`);
+export const fetchUserAppointments = ()              => api.get("/appointments/user/mine");
+export const cancelUserAppointment = (id: string)   => api.patch(`/appointments/user/${id}/cancel`, {});
 export const fetchAppointments    = ()              => api.get("/appointments/admin/all");
 export const updateAppointmentStatus = (id: string, status: string) => api.patch(`/appointments/admin/${id}/status`, { status });
 

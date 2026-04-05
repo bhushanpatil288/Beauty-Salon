@@ -7,16 +7,9 @@ import {
     CardTitle,
 } from "../../ui/card"
 import { Button } from "../../ui/button"
+import type { Service } from "../../../types"
 
-type service = {
-    heading: string,
-    subHeading: string,
-    description: string,
-    price: string,
-    duration: number
-}
-
-const ServicesCard = ({ service }: { service: service }) => {
+const ServicesCard = ({ service }: { service: Service }) => {
     return (
         <Card className="h-full mx-auto w-full max-w-sm glass-card border-secondary/50 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 group overflow-hidden relative flex flex-col justify-between">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none" />

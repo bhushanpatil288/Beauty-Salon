@@ -1,24 +1,11 @@
-import { useState, useMemo, useEffect } from "react";
-import { User, CalendarDays, Clock, Tag, FileText, Scissors, MoreHorizontal } from "lucide-react";
-import { updateAppointmentStatus } from "../../api/api";
-
-interface Appointment {
-    _id: string;
-    userId?: { name?: string; phone?: string };
-    serviceId?: {
-        heading?: string;
-        subHeading?: string;
-        price?: number;
-    };
-    date?: string;
-    time?: string;
-    duration?: number;
-    status?: string;
-    notes?: string;
-}
+import { useState, useMemo } from "react";
+import { User, CalendarDays, Clock, Tag, FileText, Scissors, MoreHorizontal, Loader2 } from "lucide-react";
+import type { Appointment } from "../../types";
 
 interface AppointmentsTableProps {
     appointments: Appointment[];
+    loading?: boolean;
+    onStatusChange?: (id: string, status: string) => void;
 }
 
 const filterTabs = ["All", "Confirmed", "Pending", "Completed", "Cancelled"] as const;
@@ -32,34 +19,25 @@ const statusStyles: Record<string, string> = {
     cancelled: "bg-red-50 text-red-600",
 };
 
-/** Map "booked" to the "confirmed" display label — adjust as your data requires */
+/** Map "booked" to the "Confirmed" display label */
 const displayStatus = (status?: string) => {
     if (status === "booked") return "Confirmed";
     if (status === "pending") return "Pending";
     return status ? status.charAt(0).toUpperCase() + status.slice(1) : "—";
 };
 
-const AppointmentsTable = ({ appointments: initialAppointments }: AppointmentsTableProps) => {
-    const [appointments, setAppointments] = useState(initialAppointments);
+const AppointmentsTable = ({ appointments, loading = false, onStatusChange }: AppointmentsTableProps) => {
     const [activeFilter, setActiveFilter] = useState<FilterTab>("All");
     const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-    useEffect(() => {
-        setAppointments(initialAppointments);
-    }, [initialAppointments]);
-
     const handleStatusChange = async (id: string, newStatus: string) => {
+        if (!onStatusChange) return;
         try {
             setUpdatingId(id);
-            await updateAppointmentStatus(id, newStatus);
-            setAppointments((prev) =>
-                prev.map((appt) => (appt._id === id ? { ...appt, status: newStatus } : appt))
-            );
-        } catch (error) {
-            console.error("Failed to update status", error);
-            alert("Failed to update status");
+            onStatusChange(id, newStatus);
         } finally {
-            setUpdatingId(null);
+            // Reset after a brief delay to give Redux time to update
+            setTimeout(() => setUpdatingId(null), 600);
         }
     };
 
@@ -68,7 +46,6 @@ const AppointmentsTable = ({ appointments: initialAppointments }: AppointmentsTa
         return appointments.filter((a) => {
             const s = a.status?.toLowerCase();
             const f = activeFilter.toLowerCase();
-            // "confirmed" filter also matches "booked"
             if (f === "confirmed") return s === "confirmed" || s === "booked";
             return s === f;
         });
@@ -98,7 +75,11 @@ const AppointmentsTable = ({ appointments: initialAppointments }: AppointmentsTa
             </div>
 
             {/* Table */}
-            {filtered.length === 0 ? (
+            {loading ? (
+                <div className="p-10 flex justify-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                </div>
+            ) : filtered.length === 0 ? (
                 <div className="p-10 text-center text-muted-foreground text-sm">
                     No appointments found.
                 </div>
@@ -139,16 +120,16 @@ const AppointmentsTable = ({ appointments: initialAppointments }: AppointmentsTa
                                     <td className="px-5 py-3">
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-xs font-semibold text-stone-600">
-                                                {appt.userId?.name?.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) ?? "?"}
+                                                {(appt.userId as any)?.name?.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) ?? "?"}
                                             </div>
                                             <div>
-                                                <p className="font-medium text-foreground">{appt.userId?.name ?? "—"}</p>
+                                                <p className="font-medium text-foreground">{(appt.userId as any)?.name ?? "—"}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-5 py-3 text-foreground">
                                         {typeof appt.serviceId === "object"
-                                            ? appt.serviceId?.heading
+                                            ? (appt.serviceId as any)?.heading
                                             : "—"}
                                     </td>
                                     <td className="px-5 py-3 text-foreground">{appt.time ?? "—"}</td>
@@ -169,7 +150,7 @@ const AppointmentsTable = ({ appointments: initialAppointments }: AppointmentsTa
                                     <td className="px-5 py-3 text-muted-foreground max-w-[180px] truncate">{appt.notes || "—"}</td>
                                     <td className="px-5 py-3">
                                         <select
-                                            disabled={updatingId === appt._id}
+                                            disabled={updatingId === appt._id || !onStatusChange}
                                             value={appt.status || "pending"}
                                             onChange={(e) => handleStatusChange(appt._id, e.target.value)}
                                             className="bg-muted text-xs font-medium px-2 py-1.5 rounded-md border border-border focus:outline-none focus:ring-1 focus:ring-stone-800 disabled:opacity-50 cursor-pointer"

@@ -18,11 +18,12 @@ A full-stack salon appointment booking system built with the MERN stack (MongoDB
 - **Admin Route Guards**: Added a dedicated `src/routes/` folder containing `ProtectedRoute.tsx` (user auth) and `AdminProtectedRoute.tsx` (admin-only — redirects non-admins to home and unauthenticated users to `/login/admin`). Both exported from a barrel `index.ts`.
 - **`adminAuth` Middleware**: Added server-side `adminAuth` middleware that validates the JWT cookie and enforces `role === "admin"` before granting access to admin-only endpoints.
 - **Admin-only Appointments Endpoint**: Added `GET /appointments/admin/all` protected by `adminAuth`. Removed the previously unprotected `GET /appointments/all` endpoint. Results are populated with user data (excluding password).
-- **Appointments in AuthContext**: `AuthContext` now fetches and exposes an `appointments` state for admin users on login/page-load. Fixed a bug where a failed appointments fetch could silently wipe the user session.
+- **Refactored Architecture**: Migrated global state management to **Redux Toolkit**. Refactored into a scalable feature-based frontend architecture structure via `src/features/` and `src/app/store.ts`.
+- **My Appointments**: Users can efficiently check their self-booked reservations directly from their profile via newly integrated API endpoints.
 - **Navbar Dashboard Link**: Navbar now conditionally shows a "Dashboard" link for admin users (both desktop and mobile menus).
 - **Role-Based Authentication**: Separate admin and user auth flows. Admin signup/login require a `secretKey` validated against `ADMIN_SECRET_KEY` in `.env`. Users are blocked from admin routes and vice versa.
 - **Admin Signup & Login Pages**: `AdminSignup.tsx` and `AdminLogin.tsx` with `secretKey` field. Backed by `adminSignupValidation` and `adminLoginValidation` middleware.
-- **Auth Session Persistence**: Fixed `AuthContext` to verify session on page refresh via `/auth/user` with a `loading` state preventing premature `<ProtectedRoute>` redirects.
+- **Auth Session Persistence**: The Redux hook initializes `initAuth()` to securely reload sessions via `/auth/user` on refresh to cleanly prevent premature `<ProtectedRoute>` redirects.
 - **Appointment Booking Flow**: `Appointment.tsx` with timeslot blocking logic using `GET /appointments/date/:date` and service duration.
 - **UI/UX Refinements**: Frosted glass navbar/footer, responsive forms, and React list rendering fixes.
 
@@ -33,10 +34,11 @@ pooja-Beauty-Salon/
 ├── client/
 │   └── src/
 │       ├── routes/          # ProtectedRoute & AdminProtectedRoute
-│       ├── pages/           # All page components
-│       ├── context/         # AuthContext, ServicesContext
+│       ├── pages/           # Page layouts and entry points
+│       ├── app/             # Global Redux store configuration and typed hooks
+│       ├── features/        # Feature-based slices (auth, services, appointments)
 │       ├── api/             # Axios API functions
-│       └── components/      # Reusable UI components
+│       └── components/      # Shared layout and UI components
 └── server/
     └── src/
         ├── controllers/     # Route handlers
@@ -49,6 +51,7 @@ pooja-Beauty-Salon/
 
 ### Frontend (`/client`)
 - **Framework**: React 19 + TypeScript + Vite
+- **State Management**: Redux Toolkit + React-Redux
 - **Styling**: Tailwind CSS v4
 - **UI Components**: shadcn/ui & Radix UI
 - **Routing**: React Router DOM (v7)
@@ -104,7 +107,7 @@ The React app will be available at `http://localhost:5173`.
 - **Customer Portal**: Browse salon services and book appointments with real-time availability checking.
 - **Admin Dashboard**: Live stats and a full appointments table (customer details, date, time, status, duration, notes). Includes inline status management (Pending/Confirmed/Completed/Cancelled) which dynamically updates the database. Admin-only — protected by `AdminProtectedRoute` on the frontend and `adminAuth` middleware on the backend.
 - **Role-Based Auth**: User model supports `"user"` and `"admin"` roles. Dedicated route guards (`ProtectedRoute`, `AdminProtectedRoute`) in `src/routes/` and server-side middleware enforce access per role.
-- **Authentication & State**: Secure HttpOnly cookie-based JWT. `AuthContext` manages user + appointments state globally, and auto-fetches admin appointments on session restore.
+- **Authentication & State**: Secure HttpOnly cookie-based JWT. Redux Toolkit slices (`authSlice`, `appointmentsSlice`) seamlessly govern scalable state tracking globally and systematically handle re-hydration on load.
 - **Appointment Timeslot Blocking**: Prevents overlapping bookings based on service duration and existing appointments for a given date.
 - **Responsive Design**: Mobile-friendly UI using Tailwind CSS and shadcn/ui.
 

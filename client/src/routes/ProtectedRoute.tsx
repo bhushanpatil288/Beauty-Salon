@@ -1,9 +1,9 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAppSelector } from "../app/hooks";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    const { user, loading } = useAuth();
+    const { user, loading } = useAppSelector((s) => s.auth);
 
     if (loading) {
         return (

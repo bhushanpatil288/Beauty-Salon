@@ -1,9 +1,16 @@
-import Layout from "./Layout"
-import ServicesCard from "../components/features/services/ServicesCard"
-import { useServices } from "../context/ServicesContext";
+import Layout from "../../components/layout/PublicLayout";
+import ServicesCard from "../../components/features/services/ServicesCard";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { fetchServices } from "../../features/services/servicesSlice";
+import { useEffect } from "react";
 
 const Services = () => {
-    const { services, loading, error } = useServices();
+    const dispatch = useAppDispatch();
+    const { list: services, loading, error } = useAppSelector((s) => s.services);
+
+    useEffect(() => {
+        if (services.length === 0) dispatch(fetchServices());
+    }, [dispatch, services.length]);
 
     return (
         <Layout>
@@ -26,7 +33,7 @@ const Services = () => {
                         </div>
                         :
                         services.length !== 0 ?
-                            services.map((service: any) => (
+                            services.map((service) => (
                                 <ServicesCard key={service._id} service={service} />
                             ))
                             :

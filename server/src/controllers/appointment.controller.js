@@ -61,4 +61,26 @@ const updateAppointmentStatus = asyncHandler(async (req, res) => {
     return ApiResponse(res, 200, "Appointment status updated", appointment);
 });
 
-module.exports = { showAllAppointments, createAppointment, getAppointmentsByDate, updateAppointmentStatus };
+const getUserAppointments = asyncHandler(async (req, res) => {
+    const appointments = await Appointment.find({ userId: req.user._id })
+        .populate({ path: "serviceId" })
+        .sort({ date: -1 });
+    return ApiResponse(res, 200, "User appointments fetched successfully", appointments);
+});
+
+const cancelUserAppointment = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const appointment = await Appointment.findOne({ _id: id, userId: req.user._id });
+    if (!appointment) throw new ApiError(404, "Appointment not found");
+    if (appointment.status === "completed") {
+        throw new ApiError(400, "Cannot cancel a completed appointment");
+    }
+    if (appointment.status === "cancelled") {
+        throw new ApiError(400, "Appointment is already cancelled");
+    }
+    appointment.status = "cancelled";
+    await appointment.save();
+    return ApiResponse(res, 200, "Appointment cancelled successfully", appointment);
+});
+
+module.exports = { showAllAppointments, createAppointment, getAppointmentsByDate, updateAppointmentStatus, getUserAppointments, cancelUserAppointment };

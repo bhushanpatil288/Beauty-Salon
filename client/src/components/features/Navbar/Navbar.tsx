@@ -1,14 +1,16 @@
 "use client"
 import { useState } from "react";
 import { services } from "../../../constants/data";
-import { useAuth } from "../../../context/AuthContext";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { clearUser } from "../../../features/auth/authSlice";
+import { clearUserList } from "../../../features/appointments/appointmentsSlice";
 import { logout } from "../../../api/api";
 import { useNavigate } from "react-router-dom";
 import { logo } from "../../../constants/data.images";
 
 import * as React from "react"
 import { Link } from "react-router-dom"
-import { Menu, X, LogIn, LogOut, User, UserPlus, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogIn, LogOut, User, UserPlus } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -21,14 +23,15 @@ import {
 import { Button } from "../../ui/button";
 
 export default function Navbar() {
-  const { user, setUser, setToken } = useAuth();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((s) => s.auth.user);
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
-    setUser(null);
-    setToken(null);
+    dispatch(clearUser());
+    dispatch(clearUserList());
     navigate("/", { replace: true });
     setIsMobileMenuOpen(false);
   }

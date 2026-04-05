@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import type { SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import Layout from "./Layout";
-import { useServices } from "../context/ServicesContext";
-import { createAppointment, getAppointmentsByDate } from "../api/api";
-import { getBlockedRanges } from "../utils/appointment-utils";
-import AppointmentHeader from "../components/features/AppointmentPage/AppointmentHeader";
-import AppointmentSuccess from "../components/features/AppointmentPage/AppointmentSuccess";
-import AppointmentForm from "../components/features/AppointmentPage/AppointmentForm";
+import Layout from "../../components/layout/PublicLayout";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { fetchServices } from "../../features/services/servicesSlice";
+import { createAppointment, getAppointmentsByDate } from "../../api/api";
+import { getBlockedRanges } from "../../utils/appointment-utils";
+import AppointmentHeader from "../../components/features/AppointmentPage/AppointmentHeader";
+import AppointmentSuccess from "../../components/features/AppointmentPage/AppointmentSuccess";
+import AppointmentForm from "../../components/features/AppointmentPage/AppointmentForm";
 
 export default function Appointment() {
-  const { services, loading: servicesLoading } = useServices();
+  const dispatch = useAppDispatch();
+  const { list: services, loading: servicesLoading } = useAppSelector((s) => s.services);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (services.length === 0) dispatch(fetchServices());
+  }, [dispatch, services.length]);
 
   const [formData, setFormData] = useState({
     serviceId: "",
@@ -63,7 +69,7 @@ export default function Appointment() {
   useEffect(() => {
     if (formData.serviceId && services.length > 0) {
       const service = services.find((s: any) => s._id === formData.serviceId);
-      setFormData(prev => ({ ...prev, duration: service?.duration || "" }));
+      setFormData(prev => ({ ...prev, duration: String(service?.duration ?? "") }));
       setSelectedService(service);
     }
 

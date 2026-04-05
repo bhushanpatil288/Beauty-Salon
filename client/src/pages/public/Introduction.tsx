@@ -1,4 +1,4 @@
-import Layout from "./Layout"
+import Layout from "../../components/layout/PublicLayout";
 
 const Introduction = () => {
     return (

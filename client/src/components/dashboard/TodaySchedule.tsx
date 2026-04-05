@@ -1,13 +1,5 @@
 import { useMemo } from "react";
-
-interface Appointment {
-    _id: string;
-    userId?: { name?: string };
-    serviceId?: { heading?: string } | string;
-    date?: string;
-    time?: string;
-    status?: string;
-}
+import type { Appointment } from "../../types";
 
 interface TodayScheduleProps {
     appointments: Appointment[];

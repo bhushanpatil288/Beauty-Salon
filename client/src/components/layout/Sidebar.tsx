@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAppSelector } from "../../app/hooks";
 import {
     LayoutDashboard,
     CalendarDays,
@@ -17,7 +17,7 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-    const { user } = useAuth();
+    const { user } = useAppSelector((state) => state.auth);
 
     return (
         <aside className="fixed left-0 top-0 bottom-0 w-56 bg-white border-r border-border flex flex-col z-40">

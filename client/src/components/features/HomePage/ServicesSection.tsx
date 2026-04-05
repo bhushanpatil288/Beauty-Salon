@@ -1,10 +1,10 @@
 import ServicesCard from "../services/ServicesCard";
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/button";
-import { useServices } from "../../../context/ServicesContext";
+import { useAppSelector } from "../../../app/hooks";
 
 const ServicesSection = () => {
-    const { services, loading, error } = useServices();
+    const { list: services, loading, error } = useAppSelector((s) => s.services);
 
 
     return (
