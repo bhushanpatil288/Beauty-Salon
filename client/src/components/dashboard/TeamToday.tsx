@@ -9,12 +9,12 @@ interface TeamMember {
 const TeamToday = () => {
     // Placeholder team data — replace with real data once Stylists feature is built
     const team: TeamMember[] = [
-        { name: "Vandana Patil", role: "Senior Stylist", appointmentCount: 6, initials: "VP", color: "bg-stone-200 text-stone-700" },
-        { name: "Pooja Patil", role: "Stylist", appointmentCount: 4, initials: "PP", color: "bg-amber-100 text-amber-700" },
+        { name: "Vandana Patil", role: "Senior Stylist", appointmentCount: 6, initials: "VP", color: "bg-accent text-accent-foreground" },
+        { name: "Pooja Patil", role: "Stylist", appointmentCount: 4, initials: "PP", color: "bg-secondary text-secondary-foreground" },
     ];
 
     return (
-        <div className="rounded-2xl border border-border bg-white shadow-sm">
+        <div className="rounded-2xl border border-border bg-card shadow-sm">
             <div className="px-5 py-4 border-b border-border">
                 <h3 className="text-sm font-semibold text-foreground">Team Today</h3>
             </div>

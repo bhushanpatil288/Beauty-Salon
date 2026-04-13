@@ -34,8 +34,8 @@ const AdminDashboard = () => {
                     change="+14% vs last Thu"
                     changeType="positive"
                     icon={CalendarDays}
-                    iconBgClass="bg-blue-50"
-                    iconTextClass="text-blue-600"
+                    iconBgClass="bg-primary/10"
+                    iconTextClass="text-primary"
                 />
                 <StatCard
                     title="This Week"
@@ -43,8 +43,8 @@ const AdminDashboard = () => {
                     change="+8% vs last week"
                     changeType="positive"
                     icon={TrendingUp}
-                    iconBgClass="bg-emerald-50"
-                    iconTextClass="text-emerald-600"
+                    iconBgClass="bg-accent"
+                    iconTextClass="text-accent-foreground"
                 />
                 <StatCard
                     title="Revenue Today"
@@ -52,8 +52,8 @@ const AdminDashboard = () => {
                     change="Coming soon"
                     changeType="neutral"
                     icon={DollarSign}
-                    iconBgClass="bg-amber-50"
-                    iconTextClass="text-amber-600"
+                    iconBgClass="bg-secondary"
+                    iconTextClass="text-secondary-foreground"
                 />
                 <StatCard
                     title="Cancellations"
@@ -61,8 +61,8 @@ const AdminDashboard = () => {
                     change={completed > 0 ? `${Math.round((cancelled / (booked + completed + cancelled)) * 100)}% of total` : "—"}
                     changeType={cancelled > 0 ? "negative" : "neutral"}
                     icon={XCircle}
-                    iconBgClass="bg-red-50"
-                    iconTextClass="text-red-500"
+                    iconBgClass="bg-destructive/15"
+                    iconTextClass="text-destructive"
                 />
             </div>
 

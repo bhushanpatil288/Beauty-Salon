@@ -17,7 +17,7 @@ const TodaySchedule = ({ appointments }: TodayScheduleProps) => {
     }, [appointments]);
 
     return (
-        <div className="rounded-2xl border border-border bg-white shadow-sm">
+        <div className="rounded-2xl border border-border bg-card shadow-sm">
             <div className="px-5 py-4 border-b border-border flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-foreground">Today's Schedule</h3>
                 <span className="text-xs text-muted-foreground">{todayAppointments.length} appointments</span>
@@ -32,7 +32,7 @@ const TodaySchedule = ({ appointments }: TodayScheduleProps) => {
                                 {appt.time ?? "—"}
                             </span>
                             <div className="flex items-start gap-2">
-                                <div className="mt-1.5 w-2 h-2 rounded-full bg-stone-800 shrink-0" />
+                                <div className="mt-1.5 w-2 h-2 rounded-full bg-primary shrink-0" />
                                 <div>
                                     <p className="text-sm font-medium text-foreground">
                                         {appt.userId?.name ?? "Unknown Client"}

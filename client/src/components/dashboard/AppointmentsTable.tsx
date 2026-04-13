@@ -17,11 +17,11 @@ const filterTabs = ["All", "Confirmed", "Pending", "Completed", "Cancelled"] as 
 type FilterTab = (typeof filterTabs)[number];
 
 const statusStyles: Record<string, string> = {
-    booked: "bg-blue-50 text-blue-700",
-    confirmed: "bg-green-50 text-green-700",
-    pending: "bg-amber-50 text-amber-700",
-    completed: "bg-emerald-50 text-emerald-700",
-    cancelled: "bg-red-50 text-red-600",
+    booked: "bg-primary/10 text-primary",
+    confirmed: "bg-primary/10 text-primary",
+    pending: "bg-secondary text-secondary-foreground",
+    completed: "bg-accent text-accent-foreground",
+    cancelled: "bg-destructive/15 text-destructive",
 };
 
 /** Map "booked" to the "Confirmed" display label */
@@ -93,7 +93,7 @@ const AppointmentsTable = ({ appointments, loading = false, onStatusChange }: Ap
     }, [appointments, activeFilter, dateFilter]);
 
     return (
-        <div className="rounded-2xl border border-border bg-white shadow-sm overflow-hidden">
+        <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
             {/* Header + filter tabs */}
             <div className="px-6 py-4 border-b border-border flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
                 <div>
@@ -150,7 +150,7 @@ const AppointmentsTable = ({ appointments, loading = false, onStatusChange }: Ap
                                 key={tab}
                                 onClick={() => setActiveFilter(tab)}
                                 className={`whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${activeFilter === tab
-                                    ? "bg-foreground text-background shadow-sm"
+                                    ? "bg-primary text-primary-foreground shadow-sm"
                                     : "text-muted-foreground hover:text-foreground"
                                     }`}
                             >
@@ -206,7 +206,7 @@ const AppointmentsTable = ({ appointments, loading = false, onStatusChange }: Ap
                                 <tr key={appt._id} className="hover:bg-muted/20 transition-colors">
                                     <td className="px-5 py-3">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-xs font-semibold text-stone-600">
+                                            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-xs font-semibold text-accent-foreground">
                                                 {(appt.userId as any)?.name?.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) ?? "?"}
                                             </div>
                                             <div>
@@ -240,7 +240,7 @@ const AppointmentsTable = ({ appointments, loading = false, onStatusChange }: Ap
                                             disabled={updatingId === appt._id || !onStatusChange}
                                             value={appt.status || "pending"}
                                             onChange={(e) => handleStatusChange(appt._id, e.target.value)}
-                                            className="bg-muted text-xs font-medium px-2 py-1.5 rounded-md border border-border focus:outline-none focus:ring-1 focus:ring-stone-800 disabled:opacity-50 cursor-pointer"
+                                            className="bg-muted text-xs font-medium px-2 py-1.5 rounded-md border border-border focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 cursor-pointer"
                                         >
                                             <option value="pending">Pending</option>
                                             <option value="booked">Confirmed</option>

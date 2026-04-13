@@ -14,7 +14,7 @@ const AdminHeader = ({ title, subtitle }: AdminHeaderProps) => {
     });
 
     return (
-        <header className="h-16 border-b border-border bg-white flex items-center justify-between px-6 sticky top-0 z-30">
+        <header className="h-16 border-b border-border/70 bg-card/90 backdrop-blur supports-[backdrop-filter]:bg-card/75 flex items-center justify-between px-6 sticky top-0 z-30">
             {/* Left: page title */}
             <div>
                 <h1 className="text-lg font-semibold text-foreground">{title}</h1>
@@ -28,10 +28,10 @@ const AdminHeader = ({ title, subtitle }: AdminHeaderProps) => {
                     <input
                         type="text"
                         placeholder="Search clients..."
-                        className="pl-9 pr-4 py-2 text-sm border border-border rounded-lg bg-muted/30 focus:outline-none focus:ring-2 focus:ring-ring/20 w-52"
+                        className="pl-9 pr-4 py-2 text-sm border border-border rounded-lg bg-background/70 focus:outline-none focus:ring-2 focus:ring-ring/30 w-52"
                     />
                 </div>
-                <button className="flex items-center gap-1.5 bg-stone-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-stone-700 transition-colors">
+                <button className="flex items-center gap-1.5 bg-primary text-primary-foreground text-sm font-medium px-4 py-2 rounded-lg hover:bg-primary/85 transition-colors">
                     <Plus className="w-4 h-4" />
                     New Booking
                 </button>
