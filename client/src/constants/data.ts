@@ -92,3 +92,13 @@ export const TIME_SLOTS = [
   "20:30",
   "21:00"
 ]
+
+// ==========================================
+// WHATSAPP API & INTEGRATION SETTINGS
+// ==========================================
+// Update this variable with your actual phone number to receive messages.
+// It MUST include the country code but NO plus sign, brackets, or dashes. 
+// For example: "919876543210" for an Indian number, or "12345678900" for US.
+// Note: Your shortlink (https://wa.me/message/GWTHA6V7FNCZO1) is useful for sharing, 
+// but for dynamic messages ("I booked <service> at <time>") we must use the direct wa.me/<number> link format.
+export const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;

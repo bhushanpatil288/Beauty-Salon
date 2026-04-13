@@ -9,6 +9,7 @@ import { getBlockedRanges } from "../../utils/appointment-utils";
 import AppointmentHeader from "../../components/features/AppointmentPage/AppointmentHeader";
 import AppointmentSuccess from "../../components/features/AppointmentPage/AppointmentSuccess";
 import AppointmentForm from "../../components/features/AppointmentPage/AppointmentForm";
+import { WHATSAPP_NUMBER } from "../../constants/data";
 
 export default function Appointment() {
   const dispatch = useAppDispatch();
@@ -55,6 +56,17 @@ export default function Appointment() {
       setError("");
       await createAppointment(formData);
       setSuccess(true);
+
+      // WhatsApp Automatic Notification System 
+      // This immediately requests the client's browser to open a WhatsApp tab with the predefined message to you.
+      if (WHATSAPP_NUMBER) {
+        const serviceName = selectedService?.heading || "a service";
+        // Customize this text structure if needed. This matches your requested formatting!
+        const message = `I booked appointment for ${serviceName} at ${formData.time}`;
+        const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      }
+
       setTimeout(() => {
         navigate("/profile");
       }, 2000);
