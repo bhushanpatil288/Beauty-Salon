@@ -7,83 +7,92 @@
 
 :root {
   --background: hsl(0, 0%, 100%);
-  --foreground: hsl(240, 10%, 3.9%);
+  --foreground: hsl(210, 15%, 10%);
+
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(210, 15%, 10%);
+
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(240, 10%, 3.9%);
-  
-  /* Rich Rose Gold / Pink for primary */
-  --primary: hsl(346.8, 77.2%, 49.8%);
-  --primary-foreground: hsl(355.7, 100%, 97.3%);
-  
-  /* Soft warm secondary */
-  --secondary: hsl(355.7, 20%, 96%);
-  --secondary-foreground: hsl(240, 5.9%, 10%);
-  
-  --muted: hsl(240, 4.8%, 95.9%);
-  --muted-foreground: hsl(240, 3.8%, 46.1%);
-  
-  --accent: hsl(346.8, 77.2%, 95%);
-  --accent-foreground: hsl(346.8, 77.2%, 40%);
-  
-  --destructive: hsl(0, 84.2%, 60.2%);
-  --destructive-foreground: hsl(0, 0%, 98%);
-  
-  --border: hsl(240, 5.9%, 90%);
-  --input: hsl(240, 5.9%, 90%);
-  --ring: hsl(346.8, 77.2%, 49.8%);
-  
+  --popover-foreground: hsl(210, 15%, 10%);
+
+  /* 🔵 Primary = Accessible Blue */
+  --primary: hsl(210, 90%, 50%);
+  --primary-foreground: hsl(0, 0%, 100%);
+
+  /* 🟢 Secondary = Soft teal background */
+  --secondary: hsl(190, 40%, 96%);
+  --secondary-foreground: hsl(210, 15%, 15%);
+
+  --muted: hsl(210, 20%, 96%);
+  --muted-foreground: hsl(210, 10%, 45%);
+
+  /* 🟦 Accent = teal highlight */
+  --accent: hsl(190, 70%, 92%);
+  --accent-foreground: hsl(190, 80%, 30%);
+
+  /* ⚠️ Destructive = amber (NOT red) */
+  --destructive: hsl(35, 85%, 55%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+
+  --border: hsl(210, 15%, 88%);
+  --input: hsl(210, 15%, 88%);
+
+  /* Focus ring = strong cyan-blue */
+  --ring: hsl(200, 100%, 45%);
+
   --radius: 0.75rem;
 
-  --sidebar: hsl(0, 0%, 98%);
-  --sidebar-foreground: hsl(240, 5.3%, 26.1%);
-  --sidebar-primary: hsl(240, 5.9%, 10%);
-  --sidebar-primary-foreground: hsl(0, 0%, 98%);
-  --sidebar-accent: hsl(240, 4.8%, 95.9%);
-  --sidebar-accent-foreground: hsl(240, 5.9%, 10%);
-  --sidebar-border: hsl(220, 13%, 91%);
-  --sidebar-ring: hsl(217.2, 91.2%, 59.8%);
+  --sidebar: hsl(210, 25%, 98%);
+  --sidebar-foreground: hsl(210, 15%, 25%);
+  --sidebar-primary: hsl(210, 90%, 45%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(210, 20%, 94%);
+  --sidebar-accent-foreground: hsl(210, 15%, 15%);
+  --sidebar-border: hsl(210, 20%, 90%);
+  --sidebar-ring: hsl(200, 100%, 45%);
 }
 
 .dark {
-  /* Deep sleek charcoal/violet dark mode */
-  --background: hsl(240, 10%, 3.9%);
-  --foreground: hsl(0, 0%, 98%);
-  
-  --card: hsl(240, 10%, 3.9%);
-  --card-foreground: hsl(0, 0%, 98%);
-  
-  --popover: hsl(240, 10%, 3.9%);
-  --popover-foreground: hsl(0, 0%, 98%);
-  
-  --primary: hsl(346.8, 77.2%, 55%);
-  --primary-foreground: hsl(355.7, 100%, 97.3%);
-  
-  --secondary: hsl(240, 3.7%, 15.9%);
-  --secondary-foreground: hsl(0, 0%, 98%);
-  
-  --muted: hsl(240, 3.7%, 15.9%);
-  --muted-foreground: hsl(240, 5%, 64.9%);
-  
-  --accent: hsl(240, 3.7%, 15.9%);
-  --accent-foreground: hsl(0, 0%, 98%);
-  
-  --destructive: hsl(0, 62.8%, 30.6%);
-  --destructive-foreground: hsl(0, 0%, 98%);
-  
-  --border: hsl(240, 3.7%, 15.9%);
-  --input: hsl(240, 3.7%, 15.9%);
-  --ring: hsl(346.8, 77.2%, 55%);
+  --background: hsl(210, 20%, 8%);
+  --foreground: hsl(0, 0%, 96%);
 
-  --sidebar: hsl(240, 5.9%, 10%);
-  --sidebar-foreground: hsl(240, 4.8%, 95.9%);
-  --sidebar-primary: hsl(224.3, 76.3%, 48%);
-  --sidebar-primary-foreground: hsl(0, 0%, 100%);
-  --sidebar-accent: hsl(240, 3.7%, 15.9%);
-  --sidebar-accent-foreground: hsl(240, 4.8%, 95.9%);
-  --sidebar-border: hsl(240, 3.7%, 15.9%);
-  --sidebar-ring: hsl(217.2, 91.2%, 59.8%);
+  --card: hsl(210, 20%, 10%);
+  --card-foreground: hsl(0, 0%, 96%);
+
+  --popover: hsl(210, 20%, 10%);
+  --popover-foreground: hsl(0, 0%, 96%);
+
+  /* 🔵 Brighter blue for dark mode */
+  --primary: hsl(210, 100%, 60%);
+  --primary-foreground: hsl(210, 20%, 10%);
+
+  --secondary: hsl(210, 15%, 18%);
+  --secondary-foreground: hsl(0, 0%, 96%);
+
+  --muted: hsl(210, 15%, 18%);
+  --muted-foreground: hsl(210, 10%, 65%);
+
+  /* 🟢 Teal accent */
+  --accent: hsl(190, 50%, 20%);
+  --accent-foreground: hsl(190, 80%, 70%);
+
+  /* ⚠️ Amber still works in dark */
+  --destructive: hsl(35, 85%, 55%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+
+  --border: hsl(210, 15%, 18%);
+  --input: hsl(210, 15%, 18%);
+
+  --ring: hsl(200, 100%, 60%);
+
+  --sidebar: hsl(210, 20%, 12%);
+  --sidebar-foreground: hsl(210, 10%, 85%);
+  --sidebar-primary: hsl(210, 100%, 60%);
+  --sidebar-primary-foreground: hsl(210, 20%, 10%);
+  --sidebar-accent: hsl(210, 15%, 18%);
+  --sidebar-accent-foreground: hsl(210, 10%, 85%);
+  --sidebar-border: hsl(210, 15%, 18%);
+  --sidebar-ring: hsl(200, 100%, 60%);
 }
 
 @theme inline {
@@ -96,7 +105,7 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  
+
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -141,9 +150,11 @@
   .glass {
     @apply bg-background/70 backdrop-blur-lg border border-border/50 shadow-sm;
   }
+
   .glass-card {
     @apply bg-card/60 backdrop-blur-xl border border-border/60 shadow-xl;
   }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-foreground;
   }

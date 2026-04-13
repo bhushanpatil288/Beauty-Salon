@@ -21,6 +21,7 @@ import {
   navigationMenuTriggerStyle,
 } from "../../ui/navigation-menu"
 import { Button } from "../../ui/button";
+import { ThemeToggle } from "../../ui/ThemeToggle";
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
@@ -98,7 +99,8 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Auth Buttons */}
-        <div className="hidden md:flex justify-center items-center gap-3">
+        <div className="hidden md:flex justify-center items-center gap-4">
+          <ThemeToggle />
           <div className="flex gap-2">
             {user ?
               <>
@@ -133,7 +135,8 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Hamburger Icon */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={toggleMobileMenu} className="text-primary hover:bg-primary/10">
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
