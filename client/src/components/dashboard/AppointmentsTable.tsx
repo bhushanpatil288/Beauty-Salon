@@ -33,6 +33,7 @@ const displayStatus = (status?: string) => {
 
 const AppointmentsTable = ({ appointments, loading = false, onStatusChange }: AppointmentsTableProps) => {
     const [activeFilter, setActiveFilter] = useState<FilterTab>("All");
+    const [dateFilter, setDateFilter] = useState<string>("All");
     const [updatingId, setUpdatingId] = useState<string | null>(null);
 
     const handleStatusChange = async (id: string, newStatus: string) => {
@@ -46,36 +47,117 @@ const AppointmentsTable = ({ appointments, loading = false, onStatusChange }: Ap
         }
     };
 
+    const toLocalIso = (date: Date) => {
+        return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+    };
+
     const filtered = useMemo(() => {
-        if (activeFilter === "All") return appointments;
         return appointments.filter((a) => {
-            const s = a.status?.toLowerCase();
-            const f = activeFilter.toLowerCase();
-            if (f === "confirmed") return s === "confirmed" || s === "booked";
-            return s === f;
+            // Status check
+            let passesStatus = true;
+            if (activeFilter !== "All") {
+                const s = a.status?.toLowerCase();
+                const f = activeFilter.toLowerCase();
+                if (f === "confirmed") {
+                    passesStatus = s === "confirmed" || s === "booked";
+                } else {
+                    passesStatus = s === f;
+                }
+            }
+
+            // Date check
+            let passesDate = true;
+            if (dateFilter !== "All") {
+                if (!a.date) {
+                    passesDate = false;
+                } else {
+                    const apptDateIso = toLocalIso(new Date(a.date));
+                    let targetDateIso = "";
+                    
+                    if (dateFilter === "Today") {
+                        targetDateIso = toLocalIso(new Date());
+                    } else if (dateFilter === "Tomorrow") {
+                        const t = new Date();
+                        t.setDate(t.getDate() + 1);
+                        targetDateIso = toLocalIso(t);
+                    } else {
+                        targetDateIso = dateFilter; // Calendar picker string
+                    }
+    
+                    passesDate = apptDateIso === targetDateIso;
+                }
+            }
+
+            return passesStatus && passesDate;
         });
-    }, [appointments, activeFilter]);
+    }, [appointments, activeFilter, dateFilter]);
 
     return (
         <div className="rounded-2xl border border-border bg-white shadow-sm overflow-hidden">
             {/* Header + filter tabs */}
-            <div className="px-6 py-4 border-b border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="px-6 py-4 border-b border-border flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
                 <div>
-                    <h2 className="text-base font-semibold text-foreground">All Appointments</h2>
+                    <h2 className="text-base font-semibold text-foreground">Appointments Management</h2>
                 </div>
-                <div className="flex gap-1 bg-muted/50 p-1 rounded-lg">
-                    {filterTabs.map((tab) => (
+
+                <div className="flex flex-col lg:flex-row gap-3 lg:items-center items-start">
+                    {/* Date Filters */}
+                    <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg border border-border/50">
                         <button
-                            key={tab}
-                            onClick={() => setActiveFilter(tab)}
-                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${activeFilter === tab
-                                ? "bg-stone-800 text-white shadow-sm"
+                            onClick={() => setDateFilter("All")}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${dateFilter === "All"
+                                ? "bg-primary text-primary-foreground shadow-sm"
                                 : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
-                            {tab}
+                            All Time
                         </button>
-                    ))}
+                        <button
+                            onClick={() => setDateFilter("Today")}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${dateFilter === "Today"
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
+                                }`}
+                        >
+                            Today
+                        </button>
+                        <button
+                            onClick={() => setDateFilter("Tomorrow")}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${dateFilter === "Tomorrow"
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
+                                }`}
+                        >
+                            Tomorrow
+                        </button>
+                        <div className="h-4 w-px bg-border/80 mx-1"></div>
+                        <input
+                            type="date"
+                            value={dateFilter !== "All" && dateFilter !== "Today" && dateFilter !== "Tomorrow" ? dateFilter : ""}
+                            onChange={(e) => setDateFilter(e.target.value || "All")}
+                            className={`pl-2 pr-1 py-1 sm:w-min w-auto bg-transparent border-none cursor-pointer text-xs font-medium rounded-md focus:ring-0 focus:outline-none transition-colors ${dateFilter !== "All" && dateFilter !== "Today" && dateFilter !== "Tomorrow"
+                                    ? "text-primary"
+                                    : "text-muted-foreground"
+                                }`}
+                            title="Calendar Picker"
+                        />
+                    </div>
+
+                    {/* Status Filters */}
+                    <div className="flex gap-1 bg-muted/50 p-1 rounded-lg border border-border/50 overflow-x-auto max-w-full">
+                        {filterTabs.map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveFilter(tab)}
+                                className={`whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${activeFilter === tab
+                                    ? "bg-foreground text-background shadow-sm"
+                                    : "text-muted-foreground hover:text-foreground"
+                                    }`}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
